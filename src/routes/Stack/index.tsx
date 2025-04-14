@@ -5,6 +5,7 @@ import { Inicial }  from "../../screens/Inicial/Inicial";
 import { Entrar } from "../../screens/Entrar/Entrar";
 import { Escolha }  from "../../screens/Escolha/Escolha";
 import { CadastroFam } from "../../screens/CadastroFam/CadastroFam";
+import { CadastroIdoso } from "../../screens/CadastroIdoso/CadastroIdoso";
 
 const { Navigator, Screen}= createNativeStackNavigator()
 
@@ -15,6 +16,7 @@ export default function(){
             <Screen name="Entrar" component={Entrar}/>
             <Screen name="Escolha" component={Escolha}/>
             <Screen name="Familia" component={CadastroFam}/>
+            <Screen name="Idoso" component={CadastroIdoso}/>
         </Navigator>
     )
 }

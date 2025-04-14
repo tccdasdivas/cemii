@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Image, Text, ScrollView } from 'react-native';
-import Texto from '../../../assets/dados.png';
+import Texto from '../../../assets/dadosIdoso.png';
+import FotoLogo from '../../../assets/logo.png';
 
-import { styles } from './CadastroFamStyles';
+import { styles } from './CadastroIdosoStyles';
 import { Input } from '../../components/TextInput/Input';
 import { Botao } from '../../components/Botao/Botao';
 
-export function CadastroFam() {
+export function CadastroIdoso() {
   return (
     <ScrollView style={{backgroundColor:'#faf8d4'}}>
     <View style={styles.container}>
@@ -18,21 +19,18 @@ export function CadastroFam() {
             <Input/>
             <Text style={styles.texto2}>CPF</Text>
             <Input/>
-            <Text style={styles.texto2}>Grau de parentesco</Text>
-            <Input/>
-            <Text style={styles.texto2}>Telefone</Text>
+            <Text style={styles.texto2}>Data de nascimento</Text>
             <Input/>
             <Text style={styles.texto2}>Cidade</Text>
             <Input/>
-            <Text style={styles.texto2}>Grau de parentesco</Text>
-            <Input/>
-            <Text style={styles.texto2}>Email</Text>
-            <Input/>
-            <Text style={styles.texto2}>Senha</Text>
+            <Text style={styles.texto2}>Necessidade Especial</Text>
             <Input/>
         </View>
         <View style={styles.botao}>
-              <Botao texto='Avançar' navegacao='Idoso'/>
+              <Botao texto='Cadastrar' navegacao='Home'/>
+        </View>
+        <View style={styles.logo}>
+            <FotoLogo/>
         </View>
     </View>
     </ScrollView>

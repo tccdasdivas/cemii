@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
       botao: {
         width:270,
         backgroundColor:'rgba(127, 169, 199 / 0.6)',
-        borderRadius:20,
+        borderRadius:22,
         height:60,
         alignItems:'center',
         justifyContent:'center',
@@ -15,6 +15,6 @@ export const styles = StyleSheet.create({
       texto:{
         color:'#5b3000',
         fontFamily:'Quicksand-Regular',
-        fontSize:23,
+        fontSize:21,
       }
 });
