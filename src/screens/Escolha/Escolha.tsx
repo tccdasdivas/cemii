@@ -8,17 +8,17 @@ import { Botao } from '../../components/Botao/Botao';
 export function Escolha() {
   return (
     <ScrollView style={{backgroundColor:'#faf8d4'}}>
-    <View style={styles.container}>
-    <Image
-        source={EscolhaImg}
-        style={styles.imagem}/>
+      <View style={styles.container}>
+        <Image
+          source={EscolhaImg}
+          style={styles.imagem}/>
 
-      <View style={{marginTop:90, alignItems:'center'}}>
-      <Botao texto='Cuidador/Enfermeiro' navegacao='Cuidador'/>
-      <Text style={styles.texto}>ou</Text>
-      <Botao texto='Familia/Idoso' navegacao='Familia'/>
+        <View style={{marginTop:100, alignItems:'center'}}>
+          <Botao texto='Cuidador/Enfermeiro' navegacao='Cuidador'/>
+          <Text style={styles.texto}>ou</Text>
+          <Botao texto='Familia/Idoso' navegacao='Familia'/>
+        </View>
       </View>
-    </View>
     </ScrollView>
   );
 }

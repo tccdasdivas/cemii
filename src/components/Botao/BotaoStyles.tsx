@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({ 
       botao: {
-        width:270,
+        width:250,
         backgroundColor:'rgba(127, 169, 199 / 0.6)',
         borderRadius:22,
         height:60,

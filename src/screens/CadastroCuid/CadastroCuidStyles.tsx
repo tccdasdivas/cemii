@@ -31,14 +31,12 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   botao:{
-    marginTop:60,
+    marginTop:40,
     marginBottom:10,
     alignItems:'center',
     justifyContent:'center'
   },
   logo:{
-    justifyContent:'center',
-    alignItems:'center',
-    marginTop:50,
-  },
+    width:10,
+  }
 })

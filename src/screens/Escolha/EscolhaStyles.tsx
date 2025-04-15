@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
       },
       imagem:{
         width:350,
-        height:250,
+        height:200,
       },
       texto:{
         color:'#5b3000',
