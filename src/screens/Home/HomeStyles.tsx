@@ -12,6 +12,18 @@ export const styles = StyleSheet.create({
   },
   icones:{
     flexDirection:'row',
-    marginTop:20
+    marginTop:40
+  },
+  icone1:{
+    flex:3,
+    paddingLeft:20,
+    backgroundColor:'#ece3b8',
+    borderColor:'#c89a65'
+  },
+  icone2:{
+    flex:3,
+    justifyContent:'flex-end',
+    backgroundColor:'#5b3000',
+    borderColor:'#c89a65'
   }
 })

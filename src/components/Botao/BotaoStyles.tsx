@@ -15,6 +15,6 @@ export const styles = StyleSheet.create({
       texto:{
         color:'#5b3000',
         fontFamily:'Quicksand-Regular',
-        fontSize:21,
+        fontSize:20,
       }
 });
