@@ -6,19 +6,22 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imagem:{
-    width:400,
+    width:450,
     height:300,
     position:'absolute'
   },
   icones:{
     flexDirection:'row',
-    marginTop:40
+    marginTop:60
   },
   icone1:{
-    flex:3,
-    paddingLeft:20,
+    borderColor:'#c89a65',
+    borderWidth:2,
+    color:"#5b3000",
+    borderRadius:20,
+    marginLeft:20,
     backgroundColor:'#ece3b8',
-    borderColor:'#c89a65'
+    padding:3,
   },
   icone2:{
     flex:3,

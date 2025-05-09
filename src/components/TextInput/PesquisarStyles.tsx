@@ -12,5 +12,11 @@ export const styles = StyleSheet.create({
     borderWidth:1,
     color:'#5b3000',
     fontFamily:'Quicksand-Regular',
+    flexDirection:'row',
+  },
+  input2:{
+    fontFamily:'Quicksand-Regular',
+    width:200,
+    height:45,
   }
 });

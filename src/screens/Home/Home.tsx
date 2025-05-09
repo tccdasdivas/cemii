@@ -3,9 +3,7 @@ import { View, Image, Text, ScrollView, ImageBackground } from 'react-native';
 import Fundo from '../../../assets/fundoHome.png';
 import { styles } from './HomeStyles';
 import { Pesquisar } from '../../components/TextInput/Pesquisar';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-
-
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 export function Home() {
     return (
@@ -13,11 +11,12 @@ export function Home() {
             <View style={styles.container}>
                 <ImageBackground source={Fundo} style={styles.imagem}/>
                 <View style={styles.icones}>
-                    <FontAwesome6 name="comments" />
+                    <AntDesign name="arrowleft" size={35} style={styles.icone1}/>
                     <Text style={styles.icone2}>V</Text>
                 </View>
                 <Pesquisar/>
             </View>
+            
         </ScrollView>
     )
 }
