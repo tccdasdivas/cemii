@@ -12,21 +12,77 @@ export const styles = StyleSheet.create({
   },
   icones:{
     flexDirection:'row',
-    marginTop:60
+    marginTop:60,
+    justifyContent:'space-between',
+    width:370,
   },
   icone1:{
     borderColor:'#c89a65',
     borderWidth:2,
     color:"#5b3000",
-    borderRadius:20,
-    marginLeft:20,
+    borderRadius:21,
     backgroundColor:'#ece3b8',
     padding:3,
   },
   icone2:{
+    justifyContent:'center',
+    backgroundColor:'#faf8d4',
+    borderColor:'#c89a65',
+    color:'#c89a65',
+    borderWidth:2,
+    borderRadius:15,
+    alignItems:'center',
+    padding:5,
+  },
+  box:{
+    backgroundColor:'#faf8d4',
+    borderRadius:30,
+    height:500,
+    width:395
+  },
+  imagem2:{
+    width:50,
+    height:50,
+  },
+  mensagem:{  
+    borderColor:'#7fa9c7',
+    borderWidth:1,
+    borderRadius:10, 
+    padding:10,
+    width:70,
+    backgroundColor:'#faf8d4',
+    position: 'relative',
+  },
+  icone4:{
     flex:3,
     justifyContent:'flex-end',
-    backgroundColor:'#5b3000',
-    borderColor:'#c89a65'
-  }
+    backgroundColor:'#faf8d4',
+    borderColor:'#8ec46e',
+    borderWidth:2,
+    borderRadius:20,
+  },
+  texto1:{
+    color:'#5b3000',
+    fontFamily:'Brixton-Regular',
+    fontSize:25,
+  },
+  texto2:{
+    color:'#5b3000',
+    fontFamily:'Brixton-Regular',
+    fontSize:20,
+  }, 
+  icone5:{
+    backgroundColor:'#faf8d4',
+    borderColor:'#7fa9c7',
+    borderWidth:2,
+    borderRadius:20,
+    color:'#c89a65',
+  },
+  icone6:{
+    backgroundColor:'#faf8d4',
+    borderColor:'#8ec46e',
+    borderWidth:2,
+    borderRadius:20,
+    color:'#725431',
+  },
 })

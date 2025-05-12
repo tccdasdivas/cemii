@@ -13,10 +13,14 @@ export const styles = StyleSheet.create({
     color:'#5b3000',
     fontFamily:'Quicksand-Regular',
     flexDirection:'row',
+    marginTop:25,
   },
   input2:{
-    fontFamily:'Quicksand-Regular',
+    fontFamily:'Quicksand-Bold',
     width:200,
     height:45,
+    fontSize:15,
+    marginLeft:5,
+    color:'#5b3000'
   }
 });
