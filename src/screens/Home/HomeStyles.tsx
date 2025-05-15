@@ -6,25 +6,17 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imagem:{
-    width:450,
+    width:400,
     height:300,
     position:'absolute'
   },
   icones:{
     flexDirection:'row',
     marginTop:60,
-    justifyContent:'space-between',
+    justifyContent:'flex-end',
     width:370,
   },
   icone1:{
-    borderColor:'#c89a65',
-    borderWidth:2,
-    color:"#5b3000",
-    borderRadius:21,
-    backgroundColor:'#ece3b8',
-    padding:3,
-  },
-  icone2:{
     justifyContent:'center',
     backgroundColor:'#faf8d4',
     borderColor:'#c89a65',
@@ -34,24 +26,37 @@ export const styles = StyleSheet.create({
     alignItems:'center',
     padding:5,
   },
+  icone2:{
+    borderColor:'#c89a65',
+    borderWidth:2,
+    color:"#5b3000",
+    borderRadius:21,
+    backgroundColor:'#ece3b8',
+    padding:3,
+  },
   box:{
     backgroundColor:'#faf8d4',
-    borderRadius:30,
+    borderRadius:22,
     height:500,
-    width:395
+    width:400,
+    paddingLeft:30,
+    paddingRight:30,
+    flexDirection:'row',
+
   },
   imagem2:{
-    width:50,
-    height:50,
+    width:40,
+    height:40,
   },
   mensagem:{  
+    flex:3,
     borderColor:'#7fa9c7',
-    borderWidth:1,
-    borderRadius:10, 
-    padding:10,
-    width:70,
+    borderWidth:2,
+    borderRadius:20, 
+    padding:20,
     backgroundColor:'#faf8d4',
-    position: 'relative',
+    marginTop:-35,
+    width:50
   },
   icone4:{
     flex:3,

@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
     fontFamily:'Quicksand-Regular',
     flexDirection:'row',
     marginTop:25,
+    marginBottom:80
   },
   input2:{
     fontFamily:'Quicksand-Bold',
