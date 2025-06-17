@@ -1,0 +1,72 @@
+import { StyleSheet } from 'react-native';
+
+export const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    backgroundColor:'#faf8d4'
+  },
+  seta:{
+    color:'#5b3000',
+    borderColor:'#c89a65',
+    borderWidth:3,
+    borderRadius:50
+  },
+  img:{
+    width:250,
+    height:130,
+    marginTop:20
+  },
+  icone:{
+    marginTop:50, 
+    width:'12%', 
+    alignItems:'center', 
+    marginLeft:15
+  },
+  texto:{
+    borderColor:'#c89a65',
+    borderWidth:2.5,
+    color:'#7d5220',
+    fontFamily:'Brixton-Regular',
+    fontSize:50,
+    borderRadius:20,
+    padding:20,
+    paddingTop:8,
+    paddingBottom:8,
+    marginTop:20,
+  },
+  texto2:{
+    paddingLeft:20,
+    paddingRight:20,
+    marginTop:35,
+  },
+  o:{
+    borderColor:'#c89a65',
+    borderWidth:2.5,
+    borderRadius:20,
+    padding:20,
+    paddingTop:15,
+    paddingBottom:15,
+    marginTop:33,
+    marginLeft:17,
+    marginRight:17,
+  },
+  imgo:{
+    width:25,
+    height:35,
+  },
+
+  fundo:{
+    width:'100%',
+    height:'100%',
+    position:'absolute',
+  },
+  box:{
+    width:'95%',
+    backgroundColor:'#faf8d4',
+    borderRadius:50,
+    height:"75%",
+    padding:13,
+    marginTop:25,
+    alignItems:'center'
+  },
+});
