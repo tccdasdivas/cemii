@@ -6,9 +6,6 @@ export const styles = StyleSheet.create({
   },
   seta:{
     color:'#5b3000',
-    borderColor:'#c89a65',
-    borderWidth:3,
-    borderRadius:50
   },
   icone:{ 
     width:'12%', 
@@ -35,14 +32,14 @@ export const styles = StyleSheet.create({
     fontSize:35, 
     color:'#7d5220'
   },
-  boxtexto:{
+  boxinput:{
     justifyContent:'center',
     alignItems:'center',
-    width:'75%'
+    width:'75%',
+    marginTop:7
   },
 
-  box2:{
-    width:'98%',
-    marginLeft:5
+  boxtexto:{
+    width:'100%',
   },
 });

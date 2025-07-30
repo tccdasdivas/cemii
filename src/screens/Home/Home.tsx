@@ -40,7 +40,7 @@ export function Home() {
                 style={styles.imagem}/>
                 <View style={styles.icone}>
                     <TouchableOpacity
-                         onPress={()=> navigation.navigate(TelaPerfil)}>
+                         onPress={()=> navigation.navigate('Perfil')}>
                         <Ionicons name="person" size={30} style={styles.perfil}/>
                     </TouchableOpacity>
                 </View>
@@ -52,7 +52,7 @@ export function Home() {
                         <View style={styles.menu}>
                             <View style={styles.mensagem}>
                                 <TouchableOpacity
-                                onPress={()=> navigation.navigate(TelaMenssagem)}>
+                                onPress={()=> navigation.navigate('Chat')}>
                                     <Image source={Menssagem} style={styles.mensagemimg}/>
                                 </TouchableOpacity>
                             </View>
