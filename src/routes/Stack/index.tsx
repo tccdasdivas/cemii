@@ -13,6 +13,7 @@ import { Favoritos } from "../../screens/Favoritos/Favotitos";
 import { Chat } from "../../screens/Chat/Chat";
 import { Menssagem } from "../../screens/Menssagem/Menssagem";
 import { Perfil } from "../../screens/Perfil/Perfil";
+import { InformacoesPerfil } from "../../screens/InformacoesPerfil/InformacoesPerfil";
 
 const { Navigator, Screen}= createNativeStackNavigator()
 
@@ -31,6 +32,7 @@ export default function(){
             <Screen name="Chat" component={Chat}/>
             <Screen name="Menssagem" component={Menssagem}/>
             <Screen name="Perfil" component={Perfil}/>
+            <Screen name="Informacao" component={InformacoesPerfil}/>
         </Navigator>
     )
 }

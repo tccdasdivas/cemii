@@ -79,8 +79,8 @@ export function Home() {
                                 </TouchableOpacity>
                         </View>
 
-                        <Perfil1/>
-                        <Perfil2/>
+                        <Perfil1 navegacao='Informacao'/>
+                        <Perfil2 navegacao='Informacao'/>
                     
                     </View>
                 </View>

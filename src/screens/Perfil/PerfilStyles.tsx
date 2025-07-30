@@ -14,25 +14,29 @@ export const styles = StyleSheet.create({
     color:'#5b3000',
     borderColor:'#c89a65',
     borderWidth:3,
-    borderRadius:50
+    borderRadius:50,
+    backgroundColor:'#ece3b8'
   },
   icone:{ 
     width:'12%', 
     alignItems:'center', 
-    marginLeft:15
+    marginLeft:15, 
+    marginTop:30
   },
-  img:{
+  imgbidu:{
     borderRadius:90,
     borderColor:'#c89a65',
-    borderWidth:2,
-    width:170,
-    height:170,
+    borderWidth:3,
+    width:180,
+    height:180,
+    position:'absolute', 
+    marginTop:30
   },
    box:{
     backgroundColor:'#faf8d4',
     borderRadius:50,
-    marginTop:100,
-    height:600,
+    marginTop:10,
+    height:500,
     width:'100%',
     alignItems:'center',
     borderColor:'#c89a65',
@@ -41,7 +45,7 @@ export const styles = StyleSheet.create({
   box2:{
     backgroundColor:'#e7d5ab',
     borderRadius:50,
-    marginTop:100,
+    marginTop:50,
     height:300,
     width:'80%',
     alignItems:'center',
@@ -52,13 +56,38 @@ export const styles = StyleSheet.create({
     borderRadius:50,
     height:280,
     width:'94%',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   texto:{
+    color:'#725431',
+    fontFamily:'Quicksand-Bold',
+    fontSize:25,
+    marginLeft:10,
+    marginTop:10,
+  },
+  texto1:{
+    color:'#725431',
+    fontFamily:'Quicksand-Regular',
+    fontSize:25,
+    marginLeft:10
+  },
+  texto2:{
     color:'#725431',
     fontFamily:'Quicksand-Regular',
     fontSize:25,
     marginTop:40,
     marginLeft:10
+  },
+  pencil:{
+    marginTop:165,
+    marginLeft:100,
+    backgroundColor:'#faf8d4',
+    borderColor:'#c89a65',
+    borderWidth:3,
+    borderRadius:30,
+    height:50,
+    width:50,
+    alignItems:'center',
+    justifyContent:'center'
   }
 });

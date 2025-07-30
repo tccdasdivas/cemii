@@ -17,8 +17,7 @@ export function Perfil() {
 
   return (
     <ScrollView style={{backgroundColor:'#faf8d4'}}>
-        <View style={styles.container}>
-            <ImageBackground 
+        <ImageBackground 
             source={Fundo} 
             style={styles.imagem}/>
             <TouchableOpacity
@@ -26,22 +25,26 @@ export function Perfil() {
                 style={styles.icone}>
                     <AntDesign name="arrowleft" size={35} style={styles.seta} />
             </TouchableOpacity>
+        <View style={styles.container}>
             <Image
             source={Bidu}
-            style={styles.img}/>
-            <FontAwesome name="pencil" size={24} color="#5b3000" />
+            style={styles.imgbidu}/>
+            <TouchableOpacity style={styles.pencil}>
+                <FontAwesome name="pencil" size={24} color="#5b3000"/>
+            </TouchableOpacity>
+            <Text style={styles.texto}>Bidu</Text>
             <View style={styles.box}>
                 <View style={styles.box2}>
                     <View style={styles.box3}>
-                        <Text style={styles.texto}>Nome</Text>
-                        <Text style={styles.texto}>Email</Text>
-                        <Text style={styles.texto}>Senha</Text>
+                        <Text style={styles.texto1}>Nome</Text>
+                        <Text style={styles.texto2}>Email</Text>
+                        <Text style={styles.texto2}>Senha</Text>
                     </View>
                 </View>
-                <View>
-                    <Text>Sair</Text>
-                    <Entypo name="log-out" size={24} color="black" />
-                </View>
+                <TouchableOpacity style={{flexDirection:'row'}}>
+                    <Text style={styles.texto}>Sair</Text>
+                    <Entypo name="log-out" size={24} color="#725431" style={{marginTop:20, marginLeft:10}}/>
+                </TouchableOpacity>
             </View>
         </View>
     </ScrollView>
