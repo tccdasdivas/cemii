@@ -24,7 +24,7 @@ export function CadastroFam() {
             <Input/>
             <Text style={styles.texto2}>Cidade</Text>
             <Input/>
-            <Text style={styles.texto2}>Grau de parentesco</Text>
+            <Text style={styles.texto2}>Estado</Text>
             <Input/>
             <Text style={styles.texto2}>Email</Text>
             <Input/>

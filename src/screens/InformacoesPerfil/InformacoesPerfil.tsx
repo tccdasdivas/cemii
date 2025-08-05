@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Image, Text, ImageBackground, TouchableOpacity } from 'react-native';
+
 
 import Manoel from '../../../assets/manoel.png';
 import O from '../../../assets/o.png';
