@@ -67,6 +67,12 @@ export const styles = StyleSheet.create({
     height:"75%",
     padding:13,
     marginTop:25,
-    alignItems:'center'
+    alignItems:'center',
+    justifyContent:'center'
+  },
+  texto3:{
+    fontFamily:'Quicksand-Regular',
+    fontSize:20, 
+    
   },
 });

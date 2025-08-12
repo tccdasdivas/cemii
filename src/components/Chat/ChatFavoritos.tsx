@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './ChatFavoritosStyles';
+import { useNavigation } from '@react-navigation/native';
 
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -13,16 +14,21 @@ type Propriedades = {
   bordercolor:string,
   coracao:string,
   bordaimg:string,
+  navegacao:string,
 };
 
 export function ChatFavoritos(props: Propriedades) {
+  const navigation = useNavigation();
+
   return (
-     <TouchableOpacity style={{borderRadius:props.border,
+     <TouchableOpacity 
+          style={{borderRadius:props.border,
           backgroundColor:props.background, 
           borderColor:props.bordercolor,
           borderWidth:1.5,
           marginTop:17,
-          }}>
+          }}
+          onPress={()=> navigation.navigate(props.navegacao)}>
         <View style={styles.perfil}>
             <Image 
             source={Manoel}

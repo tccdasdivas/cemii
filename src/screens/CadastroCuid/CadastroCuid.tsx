@@ -1,26 +1,30 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Image, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import DateTimePicker from "@react-native-community/datetimepicker"
+import { Picker } from '@react-native-picker/picker';
 
 import Texto from '../../../assets/dados.png';
 
 import { styles } from './CadastroCuidStyles';
 import { Input } from '../../components/TextInput/Input';
 import { Botao } from '../../components/Botao/Botao';
+import { StatusBar } from 'expo-status-bar';
 
 export function CadastroCuid() {
 
-  const [date, setDate] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(false);
+  const [date, setDate] = useState<Date | null>(null);
+  const [showPicker, setShowPicker] = useState(false);
+  const [selectedProfissao, setSelectedProfissao] = useState();
+
   
-     const handleChange = (event: any, selectedDate?: Date) => {
-      setShowPicker(false);
+  const handleChange = (event: any, selectedDate?: Date) => {
+    setShowPicker(false);
       if (selectedDate) {
         setDate(selectedDate);
       }
     };
   
-    const formattedDate = date.toLocaleDateString('pt-BR');
+  const formattedDate = date ? date.toLocaleDateString('pt-BR'): '';
   return (
     <ScrollView style={{backgroundColor:'#faf8d4'}}>
     <View style={styles.container}>
@@ -33,7 +37,16 @@ export function CadastroCuid() {
             <Text style={styles.texto2}>CPF</Text>
             <Input/>
             <Text style={styles.texto2}>Qual a sua profissão</Text>
-            <Input/>
+            <View style={styles.pickerContainer}> 
+              <Picker
+                selectedValue={selectedProfissao}
+                onValueChange={(itemValue, itemIndex) =>
+                  setSelectedProfissao(itemValue)}>
+                <Picker.Item label="Selecione" value={null} />
+                <Picker.Item label="Enfermeiro(a)" value="Enfermeiro(a)" />
+                <Picker.Item label="Cuidador(a) de Idosos" value="Cuidador(a) de Idoso" />
+              </Picker>
+            </View>
             <Text style={styles.texto2}>Telefone</Text>
             <Input/>
             <Text style={styles.texto2}>Cidade</Text>
@@ -51,20 +64,17 @@ export function CadastroCuid() {
                 <DateTimePicker
                 mode="date"
                 display="spinner"
-                value={date}
+                value={date ?? new Date()}
                 onChange={handleChange}
                 />
               )}
             </View>
-            <Text style={styles.texto2}>Email</Text>
-            <Input/>
-            <Text style={styles.texto2}>Senha</Text>
-            <Input/>
         </View>
         <View style={styles.botao}>
-              <Botao texto='Cadastrar' navegacao='Home'/>
+              <Botao texto='Avançar' navegacao='CuidadorEmail'/>
         </View>
     </View>
+    <StatusBar style="auto"/>
     </ScrollView>
   );
 }

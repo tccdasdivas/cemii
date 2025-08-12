@@ -51,19 +51,22 @@ export function Favoritos() {
           background="rgba(127, 169, 199/ 0.2)" 
           bordercolor="rgba(6,2,82/ 0.2)"
           coracao="rgba(87,131,162/ 0.5)"
-          bordaimg="rgba(6,2,82/ 0.2)"/>
+          bordaimg="rgba(6,2,82/ 0.2)"
+          navegacao='Menssagem'/>
 
           <ChatFavoritos border={30} 
           background="rgba(200,154,101/ 0.17)" 
           bordercolor="rgba(91,48,0/ 0.2)"
           coracao="rgba(91,48,0/ 0.2)"
-          bordaimg="rgba(91,48,0/ 0.2)"/>
+          bordaimg="rgba(91,48,0/ 0.2)"
+          navegacao='Menssagem'/>
 
           <ChatFavoritos border={30} 
           background="rgba(142,196,110/ 0.17)" 
           bordercolor="rgba(40,55,32/ 0.2)"
           coracao="rgba(40,55,32/ 0.2)"
-          bordaimg="rgba(40,55,32/ 0.2)"/>
+          bordaimg="rgba(40,55,32/ 0.2)"
+          navegacao='Menssagem'/>
         </View>
       </View>
     </ScrollView>
