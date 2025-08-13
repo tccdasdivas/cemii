@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Text, ScrollView } from 'react-native';
+import { View, Image, Text, ScrollView, StatusBar } from 'react-native';
 import Texto from '../../../assets/dados.png';
 import { Picker } from '@react-native-picker/picker';
 

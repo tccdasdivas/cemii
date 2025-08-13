@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, Image, Text, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import DateTimePicker from "@react-native-community/datetimepicker"
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 
 import Texto from '../../../assets/dadosIdoso.png';
 
@@ -22,16 +20,6 @@ export function CadastroIdoso() {
     };
   
   const formattedDate = date ? date.toLocaleDateString('pt-BR'): '';
-
-  const CadastroSchema = Yup.object().shape({
-    nome: Yup.string().required('Nome é obrigatório'),
-    cpf: Yup.string()
-    .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'Formato inválido (use 000.000.000-00)')
-    .required('CPF é obrigatório'),
-    dataNascimento: Yup.date().nullable().required('Data de aniversário é obrigatória'),
-    cidade: Yup.string().required('Cidade é obrigatória'),
-    necessidade: Yup.string().required('Necessidade especial é obrigatória')
-  });
 
   return (
     <ScrollView style={{backgroundColor:'#faf8d4'}}>

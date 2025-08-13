@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, TouchableOpacity, View, Image, ScrollView, Text } from 'react-native';
+
+import * as Font from "expo-font";
 
 import { styles } from './PerfilStyles';
 
@@ -14,6 +16,19 @@ import { useNavigation } from '@react-navigation/native';
 
 export function Perfil() {
     const navigation = useNavigation();
+    
+    const [fontsLoaded, setFontsLoaded] = useState(false);
+
+    useEffect(() => {
+      async function loadFonts() {
+        await Font.loadAsync({
+          "Quicksand-Regular": require("../../../assets/fonts/Quicksand/Quicksand-Regular.ttf"),
+          "Quicksand-Bold": require("../../../assets/fonts/Quicksand/Quicksand-Bold.ttf"),
+        });
+        setFontsLoaded(true);
+      }
+      loadFonts();
+    }, []);
 
   return (
     <ScrollView style={{backgroundColor:'#faf8d4'}}>

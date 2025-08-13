@@ -48,7 +48,7 @@ export function Sobre() {
             style={styles.fundo}
             borderRadius={40}/>
             <View style={styles.box}>
-              <View style={{width:'95%', alignItems:'center'}}>
+              <View style={{width:'95%'}}>
                 <Text style={styles.texto3}>O nosso projeto surgiu de uma gincana da semana da informática (Hackathon) em nosso primeiro ano, 
                   a  primeira ideia se chamava CRAMI(Cronograma de Rotina, Alimentação e Medicamentos para Idosos) e 
                   possuía funções diferentes, ela auxiliava o próprio idoso a ter autonomia para realizar suas tarefas 

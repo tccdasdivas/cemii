@@ -64,15 +64,18 @@ export const styles = StyleSheet.create({
     width:'95%',
     backgroundColor:'#faf8d4',
     borderRadius:50,
-    height:"75%",
     padding:13,
+    paddingBottom:0,
     marginTop:25,
     alignItems:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+    paddingEnd:5,
   },
   texto3:{
     fontFamily:'Quicksand-Regular',
     fontSize:20, 
-    
+    textAlign:'center',
+    paddingTop:5,
+    paddingBottom:14,
   },
 });

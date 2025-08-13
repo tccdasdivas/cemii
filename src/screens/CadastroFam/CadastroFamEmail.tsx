@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text, StatusBar } from 'react-native';
 
 import FotoLogo from '../../../assets/logo.png';
 
