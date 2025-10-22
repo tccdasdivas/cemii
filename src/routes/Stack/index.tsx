@@ -14,8 +14,6 @@ import { Chat } from "../../screens/Chat/Chat";
 import { Menssagem } from "../../screens/Menssagem/Menssagem";
 import { Perfil } from "../../screens/Perfil/Perfil";
 import { InformacoesPerfil } from "../../screens/InformacoesPerfil/InformacoesPerfil";
-import { CadastroCuidEmail } from "../../screens/CadastroCuid/CadastroCuidEmail";
-import { CadastroFamEmail } from "../../screens/CadastroFam/CadastroFamEmail";
 
 const { Navigator, Screen}= createNativeStackNavigator()
 
@@ -35,8 +33,6 @@ export default function(){
             <Screen name="Menssagem" component={Menssagem}/>
             <Screen name="Perfil" component={Perfil}/>
             <Screen name="Informacao" component={InformacoesPerfil}/>
-            <Screen name="CuidadorEmail" component={CadastroCuidEmail}/>
-            <Screen name="FamiliaEmail" component={CadastroFamEmail}/>
         </Navigator>
     )
 }
