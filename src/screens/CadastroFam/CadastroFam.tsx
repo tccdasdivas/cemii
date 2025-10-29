@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  View, Text, Image, ScrollView, Alert, ActivityIndicator, 
-  Platform, TouchableOpacity 
+import {
+  View, Text, Image, ScrollView, Alert, ActivityIndicator,
+  Platform, TouchableOpacity
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -11,6 +11,7 @@ import { Input } from '../../components/TextInput/Input';
 import Texto from '../../../assets/dados.png';
 import { Btn } from '../../components/Btn/Btn';
 import { MaskedTextInput } from 'react-native-mask-text';
+import { Botao } from '../../components/Botao/Botao';
 
 export function CadastroFam({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
@@ -100,51 +101,51 @@ export function CadastroFam({ navigation }: any) {
     }
 
     setLoading(true);
-        try {
-          const estadoSelecionado = estados.find(e => e.id === form.estado);
-          const cidadeSelecionada = cidades.find(c => c.id === form.cidade);
-    
-          if (!estadoSelecionado || !cidadeSelecionada) {
-            Alert.alert('Erro', 'Selecione um estado e cidade válidos.');
-            setLoading(false);
-            return;
-          }
-    
-          const payload = {
-            name: form.nome,
-            email: form.email,
-            password: form.senha,
-            telefone: form.telefone.replace(/\D/g, ''), // remove máscara
-            cpf: form.cpf.replace(/\D/g, ''), // remove máscara
-            foto: 'https://placehold.co/100x100',
-            nascimento: formatarDataEnvio(form.nascimento),
-            parentesco: form.parentesco,
-            cidade: {
-              id: cidadeSelecionada.id,
-              nome: cidadeSelecionada.nome,
-              estado: {
-                id: estadoSelecionado.id,
-                nome: estadoSelecionado.nome,
-                sigla: estadoSelecionado.sigla,
-              },
-            },
-          };
+    try {
+      const estadoSelecionado = estados.find(e => e.id === form.estado);
+      const cidadeSelecionada = cidades.find(c => c.id === form.cidade);
+
+      if (!estadoSelecionado || !cidadeSelecionada) {
+        Alert.alert('Erro', 'Selecione um estado e cidade válidos.');
+        setLoading(false);
+        return;
+      }
+
+      const payload = {
+        name: form.nome,
+        email: form.email,
+        password: form.senha,
+        telefone: form.telefone.replace(/\D/g, ''), // remove máscara
+        cpf: form.cpf.replace(/\D/g, ''), // remove máscara
+        foto: 'https://placehold.co/100x100',
+        nascimento: formatarDataEnvio(form.nascimento),
+        parentesco: form.parentesco,
+        cidade: {
+          id: cidadeSelecionada.id,
+          nome: cidadeSelecionada.nome,
+          estado: {
+            id: estadoSelecionado.id,
+            nome: estadoSelecionado.nome,
+            sigla: estadoSelecionado.sigla,
+          },
+        },
+      };
 
       console.log('📦 Enviando para /auth/register:', payload);
-      
-            await api.post('/auth/register', payload);
-      
-            Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-            navigation.navigate('Home');
-          } catch (error: any) {
-            console.error('❌ Erro no cadastro:', error);
-            const msg = error?.response?.data || 'Erro ao cadastrar.';
-            Alert.alert('Erro', String(msg));
-          } finally {
-            setLoading(false);
-          }
-        };
-      
+
+      await api.post('/auth/register', payload);
+
+      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+      navigation.navigate('Idoso');
+    } catch (error: any) {
+      console.error('❌ Erro no cadastro:', error);
+      const msg = error?.response?.data || 'Erro ao cadastrar.';
+      Alert.alert('Erro', String(msg));
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <ScrollView style={{ backgroundColor: '#faf8d4' }}>
@@ -192,7 +193,7 @@ export function CadastroFam({ navigation }: any) {
           </View>
 
           <Text style={styles.texto2}>Telefone</Text>
-        <MaskedTextInput
+          <MaskedTextInput
             mask="(99) 99999-9999"
             keyboardType="phone-pad"
             value={form.telefone}
@@ -211,30 +212,30 @@ export function CadastroFam({ navigation }: any) {
           />
 
           <Text style={styles.texto2}>Data de Nascimento</Text>
-<TouchableOpacity
-  style={{
-    backgroundColor: 'rgba(142,196,110,0.6)',
-    width: 300,
-    height: 45,
-    borderRadius: 25,
-    borderColor: 'rgba(40,55,32,0.6)',
-    borderWidth: 1,
-    justifyContent: 'center', // centraliza verticalmente
-  // centraliza horizontalmente
-  }}
-  onPress={() => setShowDatePicker(true)}
->
-  <Text
-    style={{
-      color: '#5b3000',
-      fontFamily: 'Quicksand-Regular',
-      marginHorizontal: 18, // pequena margem lateral
-    
-    }}
-  >
-    {formatarDataDisplay(form.nascimento)}
-  </Text>
-</TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: 'rgba(142,196,110,0.6)',
+              width: 300,
+              height: 45,
+              borderRadius: 25,
+              borderColor: 'rgba(40,55,32,0.6)',
+              borderWidth: 1,
+              justifyContent: 'center', // centraliza verticalmente
+              // centraliza horizontalmente
+            }}
+            onPress={() => setShowDatePicker(true)}
+          >
+            <Text
+              style={{
+                color: '#5b3000',
+                fontFamily: 'Quicksand-Regular',
+                marginHorizontal: 18, // pequena margem lateral
+
+              }}
+            >
+              {formatarDataDisplay(form.nascimento)}
+            </Text>
+          </TouchableOpacity>
 
           {showDatePicker && (
             <DateTimePicker
@@ -248,39 +249,39 @@ export function CadastroFam({ navigation }: any) {
             />
           )}
 
-             <Text style={styles.texto2}>Estado</Text>
-                    <View style={styles.pickerContainer}>
-                      <Picker
-                        selectedValue={form.estado}
-                        onValueChange={itemValue => {
-                          handleChange('estado', itemValue);
-                          handleChange('cidade', '');
-                        }}
-                      >
-                        <Picker.Item label="Selecione o Estado" value="" />
-                        {estados.map(estado => (
-                          <Picker.Item key={estado.id} label={estado.nome} value={estado.id} />
-                        ))}
-                      </Picker>
-                    </View>
-          
-                    <Text style={styles.texto2}>Cidade</Text>
-                    <View style={styles.pickerContainer}>
-                      {loadingCidades ? (
-                        <ActivityIndicator size="small" color="#333" />
-                      ) : (
-                        <Picker
-                          selectedValue={form.cidade}
-                          onValueChange={itemValue => handleChange('cidade', itemValue)}
-                          enabled={!!form.estado}
-                        >
-                          <Picker.Item label="Selecione a Cidade" value="" />
-                          {cidades.map(cidade => (
-                            <Picker.Item key={cidade.id} label={cidade.nome} value={cidade.id} />
-                          ))}
-                        </Picker>
-                      )}
-                    </View>
+          <Text style={styles.texto2}>Estado</Text>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={form.estado}
+              onValueChange={itemValue => {
+                handleChange('estado', itemValue);
+                handleChange('cidade', '');
+              }}
+            >
+              <Picker.Item label="Selecione o Estado" value="" />
+              {estados.map(estado => (
+                <Picker.Item key={estado.id} label={estado.nome} value={estado.id} />
+              ))}
+            </Picker>
+          </View>
+
+          <Text style={styles.texto2}>Cidade</Text>
+          <View style={styles.pickerContainer}>
+            {loadingCidades ? (
+              <ActivityIndicator size="small" color="#333" />
+            ) : (
+              <Picker
+                selectedValue={form.cidade}
+                onValueChange={itemValue => handleChange('cidade', itemValue)}
+                enabled={!!form.estado}
+              >
+                <Picker.Item label="Selecione a Cidade" value="" />
+                {cidades.map(cidade => (
+                  <Picker.Item key={cidade.id} label={cidade.nome} value={cidade.id} />
+                ))}
+              </Picker>
+            )}
+          </View>
 
           <Text style={styles.texto2}>Email</Text>
           <Input value={form.email} onChangeText={v => handleChange('email', v)} />
@@ -297,7 +298,7 @@ export function CadastroFam({ navigation }: any) {
           {loading ? (
             <ActivityIndicator size="large" color="#333" />
           ) : (
-            <Btn texto="Cadastrar" onPress={handleSubmit} />
+            <Btn texto="Avançar" onPress={handleSubmit} />
           )}
         </View>
       </View>
