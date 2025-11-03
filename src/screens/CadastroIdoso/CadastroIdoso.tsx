@@ -29,6 +29,7 @@ export function CadastroIdoso({ navigation }: any) {
     numero:'',
     logradouro:'',
     nascimento: new Date(),
+    responsavel:'',
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -125,14 +126,15 @@ export function CadastroIdoso({ navigation }: any) {
             sigla: estadoSelecionado.sigla,
           },
         },
+        responsavel: form.responsavel ? { id: form.responsavel } : null,
         necessidade: form.necessidade,
         numero: form.numero,
         logradouro: form.logradouro
       };
 
-      console.log('📦 Enviando para /auth/register:', payload);
+      console.log('📦 Enviando para /idosos', payload);
 
-      await api.post('/auth/register', payload);
+      await api.post('/idosos', payload);
 
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       navigation.navigate('Home');
