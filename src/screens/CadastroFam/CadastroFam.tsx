@@ -3,6 +3,7 @@ import {
   View, Text, Image, ScrollView, Alert, ActivityIndicator,
   Platform, TouchableOpacity
 } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { api } from '../../services/api';
@@ -129,11 +130,16 @@ export function CadastroFam({ navigation }: any) {
             sigla: estadoSelecionado.sigla,
           },
         },
+        tipo:'RESPONSAVEL',
       };
 
       console.log('📦 Enviando para /auth/register:', payload);
 
-      await api.post('/auth/register', payload);
+      const response = await api.post("/auth/register", payload);
+
+      // 🔐 Salva token localmente
+      const { token } = response.data;
+      await AsyncStorage.setItem("@token", token);
 
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       navigation.navigate('Idoso');

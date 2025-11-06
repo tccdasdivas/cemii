@@ -3,7 +3,8 @@ import {
   View, Image, Text, ScrollView, TextInput, TouchableOpacity,
   ActivityIndicator, Alert, Platform
 } from 'react-native';
-import DateTimePicker from "@react-native-community/datetimepicker"
+import DateTimePicker from "@react-native-community/datetimepicker";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Texto from '../../../assets/dadosIdoso.png';
 
@@ -126,7 +127,6 @@ export function CadastroIdoso({ navigation }: any) {
             sigla: estadoSelecionado.sigla,
           },
         },
-        responsavel: form.responsavel ? { id: form.responsavel } : null,
         necessidade: form.necessidade,
         numero: form.numero,
         logradouro: form.logradouro
@@ -134,7 +134,8 @@ export function CadastroIdoso({ navigation }: any) {
 
       console.log('📦 Enviando para /idosos', payload);
 
-      await api.post('/idosos', payload);
+      const response = await api.post('/idosos', payload);
+      console.log('✅ Resposta:', response.data);
 
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       navigation.navigate('Home');

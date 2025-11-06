@@ -146,6 +146,7 @@ export function CadastroCuid({ navigation }: any) {
           },
         },
         coren: form.coren,
+        tipo: 'CUIDADOR',
       };
 
       console.log('📦 Enviando para /auth/register:', payload);
