@@ -137,10 +137,6 @@ export function CadastroFam({ navigation }: any) {
 
       const response = await api.post("/auth/register", payload);
 
-      // 🔐 Salva token localmente
-      const { token } = response.data;
-      await AsyncStorage.setItem("@token", token);
-
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       navigation.navigate('Idoso');
     } catch (error: any) {

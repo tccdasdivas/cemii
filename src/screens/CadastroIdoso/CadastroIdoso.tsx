@@ -132,10 +132,9 @@ export function CadastroIdoso({ navigation }: any) {
         logradouro: form.logradouro
       };
 
-      console.log('📦 Enviando para /idosos', payload);
+      console.log('📦 Enviando para /auth/register', payload);
 
-      const response = await api.post('/idosos', payload);
-      console.log('✅ Resposta:', response.data);
+      await api.post('/auth/register', payload);
 
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       navigation.navigate('Home');
