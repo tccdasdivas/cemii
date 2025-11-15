@@ -91,9 +91,41 @@ export const styles = StyleSheet.create({
     fontFamily:'Brixton-Regular',
     fontSize:19,
   },
+  texto3:{
+    color:'#7d5220',
+    fontFamily:'Brixton-Regular',
+    fontSize:19,
+  },
   container2:{
     width:'100%',
     alignItems:'center',
+  },
+  contperfil1:{
+    width:'100%',
+    backgroundColor:'rgba(142, 196, 110/ 0.4)',
+    borderRadius:40,
+    height:200,
+    alignItems:'center',
+    marginTop:30
+  },
+  boxperfil1:{
+    width:'97%',
+    backgroundColor:'#faf8d4',
+    borderRadius:40,
+    height:'90%',
+    padding:13
+  },
+  perfil1:{
+    justifyContent:'center',
+    backgroundColor:'#faf8d4',
+    borderColor:'#7fa9c7',
+    color:'#c89a65',
+    borderWidth:1,
+    borderRadius:15,
+    alignItems:'center',
+    padding:5,
+    paddingBottom:0,
+    paddingTop:10,
   },
 
 })
