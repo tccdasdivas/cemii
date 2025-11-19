@@ -13,6 +13,7 @@ import { Input } from '../../components/TextInput/Input';
 import { Botao } from '../../components/Botao/Botao';
 import { api } from '../../services/api';
 import { Btn } from '../../components/Btn/Btn';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function Entrar({ navigation }: any) {
   const [form, setForm] = useState({
@@ -47,7 +48,7 @@ export function Entrar({ navigation }: any) {
       console.log('✅ Login bem-sucedido:', response.data);
 
       // Você pode salvar o token se quiser (ex: AsyncStorage)
-      // await AsyncStorage.setItem('token', response.data.token);
+      //await AsyncStorage.setItem('token', response.data.token);
 
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
       navigation.navigate('Home');

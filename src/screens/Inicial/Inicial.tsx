@@ -8,7 +8,7 @@ import { Botao } from '../../components/Botao/Botao';
 
 export function Inicial() {
   return (
-    <ScrollView style={{backgroundColor:'#faf8d4'}}>
+    <ScrollView style={{backgroundColor:'#fbf7cf'}}>
     <View style={styles.container}>
       <Image source={FotoLogo}/>
         <View style={{marginTop:80, alignItems:'center'}}>
