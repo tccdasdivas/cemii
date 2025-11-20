@@ -1,131 +1,152 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
-  imagem:{
-    width:'100%',
-    height:330,
-    position:'absolute'
+  imagem: {
+    width: "100%",
+    height: 330,
+    position: "absolute",
   },
-  icone:{
-    flexDirection:'row',
-    marginTop:60,
-    justifyContent:'flex-end',
-    width:370,
+  icone: {
+    flexDirection: "row",
+    marginTop: 60,
+    justifyContent: "flex-end",
+    width: 370,
   },
-  perfil:{
-    justifyContent:'center',
-    backgroundColor:'#faf8d4',
-    borderColor:'#c89a65',
-    color:'#c89a65',
-    borderWidth:2,
-    borderRadius:15,
+  perfil: {
+    justifyContent: "center",
+    backgroundColor: "#faf8d4",
+    borderColor: "#c89a65",
+    color: "#c89a65",
+    borderWidth: 2,
+    borderRadius: 15,
+    alignItems: "center",
+    padding: 5,
+  },
+  box: {
+    backgroundColor: "#faf8d4",
+    borderRadius: 50,
+    marginTop: 100,
+    height: 100,
+    width: "100%",
+    alignItems: "center",
+  },
+  menu: {
+    width: "83%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  mensagemimg: {
+    width: 40,
+    height: 40,
+  },
+  oculosimg: {
+    width: 55,
+    height: 25,
+  },
+  mensagem: {
+    borderColor: "#7fa9c7",
+    borderWidth: 2,
+    borderRadius: 20,
+    padding: 20,
+    backgroundColor: "#faf8d4",
+    marginTop: -35,
+    alignItems: "center",
+  },
+  coracao: {
+    borderColor: "#8ec46e",
+    borderWidth: 2,
+    borderRadius: 20,
+    padding: 24,
+    backgroundColor: "#faf8d4",
+    marginTop: -35,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  oculos: {
+    borderColor: "#7fa9c7",
+    borderWidth: 2,
+    borderRadius: 20,
+    padding: 14,
+    backgroundColor: "#faf8d4",
+    marginTop: -35,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textos: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    marginTop: 15,
+  },
+  texto1: {
+    color: "#5b3000",
+    fontFamily: "Brixton-Regular",
+    fontSize: 25,
+  },
+  texto2: {
+    color: "#5b3000",
+    fontFamily: "Brixton-Regular",
+    fontSize: 19,
+  },
+  texto3: {
+    color: "#7d5220",
+    fontFamily: "Brixton-Regular",
+    fontSize: 19,
+    flexWrap: "wrap",
+  },
+  container2: {
+    width: "100%",
+    alignItems: "center",
+  },
+  contperfil1: {
+    width: "100%",
+    backgroundColor: "rgba(142, 196, 110/ 0.4)",
+    borderRadius: 40,
+    alignItems: "center",
+    marginTop: 30,
+    minHeight: 80,
+  },
+  boxperfil1: {
+    width: "97%",
+    backgroundColor: "#faf8d4",
+    borderRadius: 40,
+    padding: 13,
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginBottom:10,
+  },
+  perfil1: {
+    justifyContent: "center",
+    backgroundColor: "#faf8d4",
+    borderColor: "#7fa9c7",
+    color: "#c89a65",
+    borderWidth: 1,
+    borderRadius: 15,
+    alignItems: "center",
+    padding: 5,
+    paddingBottom: 0,
+    paddingTop: 10,
+  },
+  input:{
+    backgroundColor:'rgba(236, 227, 184 / 0.7)',
+    width:300,
+    height:45,
+    borderRadius:25,
+    paddingLeft:15,
     alignItems:'center',
-    padding:5,
-  },
-  box:{
-    backgroundColor:'#faf8d4',
-    borderRadius:50,
-    marginTop:100,
-    height:100,
-    width:'100%',
-    alignItems:'center'
-  },
-  menu:{
-    width:'83%',
-    flexDirection:'row',
-    justifyContent:'space-between'
-  },
-  mensagemimg:{
-    width:40,
-    height:40,
-  },
-  oculosimg:{
-    width:55,
-    height:25,
-  },
-  mensagem:{  
-    borderColor:'#7fa9c7',
-    borderWidth:2,
-    borderRadius:20, 
-    padding:20,
-    backgroundColor:'#faf8d4',
-    marginTop:-35,
-    alignItems:'center'
-  },
-   coracao:{  
-    borderColor:'#8ec46e',
-    borderWidth:2,
-    borderRadius:20, 
-    padding:24,
-    backgroundColor:'#faf8d4',
-    marginTop:-35,
-    alignItems:'center',
-    justifyContent:'center',
-  },
-  oculos:{  
-    borderColor:'#7fa9c7',
-    borderWidth:2,
-    borderRadius:20, 
-    padding:14,
-    backgroundColor:'#faf8d4',
-    marginTop:-35,
-    alignItems:'center',
-    justifyContent:'center'
-  },
-  textos:{
-    justifyContent:'space-between',
-    flexDirection:'row',
-    marginTop:15
-  },
-  texto1:{
-    color:'#5b3000',
-    fontFamily:'Brixton-Regular',
-    fontSize:25,
-  },
-  texto2:{
-    color:'#5b3000',
-    fontFamily:'Brixton-Regular',
-    fontSize:19,
-  },
-  texto3:{
-    color:'#7d5220',
-    fontFamily:'Brixton-Regular',
-    fontSize:19,
-  },
-  container2:{
-    width:'100%',
-    alignItems:'center',
-  },
-  contperfil1:{
-    width:'100%',
-    backgroundColor:'rgba(142, 196, 110/ 0.4)',
-    borderRadius:40,
-    height:200,
-    alignItems:'center',
-    marginTop:30
-  },
-  boxperfil1:{
-    width:'97%',
-    backgroundColor:'#faf8d4',
-    borderRadius:40,
-    height:'90%',
-    padding:13
-  },
-  perfil1:{
-    justifyContent:'center',
-    backgroundColor:'#faf8d4',
-    borderColor:'#7fa9c7',
-    color:'#c89a65',
+    borderColor:'rgba(250, 248, 212/ 0.7)',
     borderWidth:1,
-    borderRadius:15,
-    alignItems:'center',
-    padding:5,
-    paddingBottom:0,
-    paddingTop:10,
+    color:'#5b3000',
+    fontFamily:'Quicksand-Regular',
+    flexDirection:'row',
   },
-
-})
+  input2:{
+    fontFamily:'Quicksand-Regular',
+    width:200,
+    height:45,
+  },
+});

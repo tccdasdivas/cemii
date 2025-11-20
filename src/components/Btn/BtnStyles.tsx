@@ -1,19 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'rgba(142,196,110,0.6)',
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: 'rgba(40,55,32,0.6)',
-    borderWidth: 1
+    width: 270,
+    backgroundColor: "rgba(127, 169, 199 / 0.6)",
+    borderRadius: 20,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "rgba(6,2,82 / 0.6)",
+    borderWidth: 1,
   },
   text: {
-    color: '#5b3000',
-    fontSize: 18,
-    fontFamily: 'Quicksand-Bold',
+    color: "#5b3000",
+    fontFamily: "Quicksand-Regular",
+    fontSize: 23,
   },
 });
