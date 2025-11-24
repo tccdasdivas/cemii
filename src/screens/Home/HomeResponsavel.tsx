@@ -28,7 +28,7 @@ import { useFonts } from "expo-font";
 import { api } from "../../services/api";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ModalFiltro } from "../../components/FiltroCuidador/ModalFiltro";
+import { ModalFiltro } from "../../components/FiltroResponsavel/ModalFiltro";
 
 interface Estado {
   id: number;
@@ -88,32 +88,21 @@ export function HomeResponsavel() {
   };
 
   const getUsers = async () => {
-    try {
-      const response = await api.get("/usuarios");
-      const data = response.data;
-  
-      console.log("API retornou:", data);
-  
-      // Garante que SEMPRE será um array
-      if (Array.isArray(data)) {
-        setUsers(data);
-      } else if (Array.isArray(data?.usuarios)) {
-        setUsers(data.usuarios);
-      } else {
-        setUsers([]); // evita erro quando não há usuários
-      }
-  
-    } catch (err: any) {
-      Alert.alert("Ops", err.response?.data?.erros ?? "Tente novamente!");
-    }
-  };
+    await api
+      .get("/usuarios")
+      .then((response) => {
+        console.log(response.data);
 
-  useEffect(() => {
-    carregarTipoUsuario();
-  }, []);
+        setUsers(response.data);
+      })
+      .catch((err: any) => {
+        Alert.alert("Ops", err.response?.data?.erros ?? "Tente novamente!");
+      });
+  };
 
   useFocusEffect(
     useCallback(() => {
+      carregarTipoUsuario();
       getUsers();
     }, [])
   );
@@ -125,16 +114,6 @@ export function HomeResponsavel() {
   });
 
   if (!fontsLoaded) return null;
-
-  if (!tipoUsuarioLogado) {
-    console.log("⏳ Tipo do usuário ainda não carregou");
-    return (
-      <View>
-        <Text>Carregando...</Text>
-      </View>
-    );
-  }
-  
 
   const usuariosFiltrados = users.filter((user) => {
     const tipoLogado = tipoUsuarioLogado?.toLowerCase();

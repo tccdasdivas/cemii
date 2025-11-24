@@ -1,25 +1,23 @@
 import React from "react";
 import { Modal, View, Text, TouchableOpacity } from "react-native";
 import { styles } from "./stylesFiltro";
-import { FiltroProfissao } from "./FiltroProfissao";
-import { FiltroExperiencia } from "./FiltroExperiencia";
+
+import { FiltroNecessidade } from "./FiltroNecessidade";
 
 interface Props {
   visible: boolean;
   fechar: () => void;
-  filtroProfissao: string | null;
-  setFiltroProfissao: (value: string | null) => void;
-  filtroExperiencia: boolean | null;
-  setFiltroExperiencia: (value: boolean | null) => void;
+
+  // <- mesma tipagem que o componente FiltroNecessidade
+  filtroNecessidade: "sim" | "nao" | null;
+  setFiltroNecessidade: (value: "sim" | "nao" | null) => void;
 }
 
 export function ModalFiltro({
   visible,
   fechar,
-  filtroProfissao,
-  setFiltroProfissao,
-  filtroExperiencia,
-  setFiltroExperiencia,
+  filtroNecessidade,
+  setFiltroNecessidade,
 }: Props) {
   return (
     <Modal visible={visible} transparent animationType="slide">
@@ -27,14 +25,10 @@ export function ModalFiltro({
         <View style={styles.modalBox}>
           <Text style={styles.modalTitulo}>Filtrar Perfis</Text>
 
-          <FiltroProfissao
-            filtroProfissao={filtroProfissao}
-            setFiltroProfissao={setFiltroProfissao}
-          />
-
-          <FiltroExperiencia
-            filtroExperiencia={filtroExperiencia}
-            setFiltroExperiencia={setFiltroExperiencia}
+          {/* FILTRO NECESSIDADE */}
+          <FiltroNecessidade
+            filtroNecessidade={filtroNecessidade}
+            setFiltroNecessidade={setFiltroNecessidade}
           />
 
           <View style={styles.botoes}>

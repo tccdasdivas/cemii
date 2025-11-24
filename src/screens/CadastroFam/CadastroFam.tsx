@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
-  View, Text, Image, ScrollView, Alert, ActivityIndicator,
-  Platform, TouchableOpacity
-} from 'react-native';
+  View,
+  Text,
+  Image,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Picker } from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { api } from '../../services/api';
-import { styles } from './CadastroFamStyles';
-import { Input } from '../../components/TextInput/Input';
-import Texto from '../../../assets/dados.png';
-import { Btn } from '../../components/Btn/Btn';
-import { MaskedTextInput } from 'react-native-mask-text';
-import { Botao } from '../../components/Botao/Botao';
+import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { api } from "../../services/api";
+import { styles } from "./CadastroFamStyles";
+import { Input } from "../../components/TextInput/Input";
+import Texto from "../../../assets/dados.png";
+import { Btn } from "../../components/Btn/Btn";
+import { MaskedTextInput } from "react-native-mask-text";
+import { Botao } from "../../components/Botao/Botao";
 
 export function CadastroFam({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
@@ -21,37 +27,35 @@ export function CadastroFam({ navigation }: any) {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    nome: '',
-    cpf: '',
-    telefone: '',
-    cidade: '',
-    estado: '',
-    email: '',
-    senha: '',
-    parentesco: '',
+    nome: "",
+    cpf: "",
+    telefone: "",
+    cidade: "",
+    estado: "",
+    email: "",
+    senha: "",
+    parentesco: "",
     nascimento: new Date(),
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // 📍 Carrega estados do backend
   useEffect(() => {
     const fetchEstados = async () => {
       try {
-        const response = await api.get('/ibge/estados');
+        const response = await api.get("/ibge/estados");
         const ordenados = response.data.sort((a: any, b: any) =>
           a.nome.localeCompare(b.nome)
         );
         setEstados(ordenados);
       } catch (error) {
         console.error(error);
-        Alert.alert('Erro', 'Não foi possível carregar os estados.');
+        Alert.alert("Erro", "Não foi possível carregar os estados.");
       }
     };
     fetchEstados();
   }, []);
 
-  // 📍 Carrega cidades ao selecionar estado
   useEffect(() => {
     if (form.estado) {
       const fetchCidades = async () => {
@@ -64,7 +68,7 @@ export function CadastroFam({ navigation }: any) {
           setCidades(ordenadas);
         } catch (error) {
           console.error(error);
-          Alert.alert('Erro', 'Não foi possível carregar as cidades.');
+          Alert.alert("Erro", "Não foi possível carregar as cidades.");
         } finally {
           setLoadingCidades(false);
         }
@@ -76,38 +80,43 @@ export function CadastroFam({ navigation }: any) {
   }, [form.estado]);
 
   const handleChange = (key: string, value: any) => {
-    setForm(prev => ({ ...prev, [key]: value }));
+    setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  // 🧩 Formata a data para exibição e envio
   const formatarDataDisplay = (data: Date) => {
-    const dia = String(data.getDate()).padStart(2, '0');
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const dia = String(data.getDate()).padStart(2, "0");
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
     const ano = data.getFullYear();
     return `${dia}/${mes}/${ano}`;
   };
 
   const formatarDataEnvio = (data: Date) => {
     const ano = data.getFullYear();
-    const mes = String(data.getMonth() + 1).padStart(2, '0');
-    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, "0");
+    const dia = String(data.getDate()).padStart(2, "0");
     return `${ano}-${mes}-${dia}`;
   };
 
-  // 🧱 Função principal de cadastro
+  
   const handleSubmit = async () => {
-    if (!form.nome || !form.email || !form.senha || !form.estado || !form.cidade) {
-      Alert.alert('Atenção', 'Preencha todos os campos obrigatórios.');
+    if (
+      !form.nome ||
+      !form.email ||
+      !form.senha ||
+      !form.estado ||
+      !form.cidade
+    ) {
+      Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
       return;
     }
 
     setLoading(true);
     try {
-      const estadoSelecionado = estados.find(e => e.id === form.estado);
-      const cidadeSelecionada = cidades.find(c => c.id === form.cidade);
+      const estadoSelecionado = estados.find((e) => e.id === form.estado);
+      const cidadeSelecionada = cidades.find((c) => c.id === form.cidade);
 
       if (!estadoSelecionado || !cidadeSelecionada) {
-        Alert.alert('Erro', 'Selecione um estado e cidade válidos.');
+        Alert.alert("Erro", "Selecione um estado e cidade válidos.");
         setLoading(false);
         return;
       }
@@ -116,9 +125,9 @@ export function CadastroFam({ navigation }: any) {
         name: form.nome,
         email: form.email,
         password: form.senha,
-        telefone: form.telefone.replace(/\D/g, ''), // remove máscara
-        cpf: form.cpf.replace(/\D/g, ''), // remove máscara
-        foto: 'https://placehold.co/100x100',
+        telefone: form.telefone.replace(/\D/g, ""), // remove máscara
+        cpf: form.cpf.replace(/\D/g, ""), // remove máscara
+        foto: "https://placehold.co/100x100",
         nascimento: formatarDataEnvio(form.nascimento),
         parentesco: form.parentesco,
         cidade: {
@@ -130,52 +139,54 @@ export function CadastroFam({ navigation }: any) {
             sigla: estadoSelecionado.sigla,
           },
         },
-        tipo:'RESPONSAVEL',
+        tipo: "RESPONSAVEL",
       };
 
-      console.log('📦 Enviando para /auth/register:', payload);
+      console.log("📦 Enviando para /auth/register:", payload);
 
       const response = await api.post("/auth/register", payload);
 
-      await AsyncStorage.setItem("usuarioId", String(response.data.id));
+      await AsyncStorage.setItem("userId", String(response.data.id));
 
-      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-      navigation.navigate('Idoso');
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+      navigation.navigate("Idoso");
     } catch (error: any) {
-      console.error('❌ Erro no cadastro:', error);
-      const msg = error?.response?.data || 'Erro ao cadastrar.';
-      Alert.alert('Erro', String(msg));
+      console.error("❌ Erro no cadastro:", error);
+      const msg = error?.response?.data || "Erro ao cadastrar.";
+      Alert.alert("Erro", String(msg));
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
-    <ScrollView style={{ backgroundColor: '#faf8d4' }}>
+    <ScrollView style={{ backgroundColor: "#faf8d4" }}>
       <View style={styles.container}>
         <Image source={Texto} style={styles.imagem} />
 
         <View style={styles.caixatexto}>
           <Text style={styles.texto}>Nome Completo</Text>
-          <Input value={form.nome} onChangeText={v => handleChange('nome', v)} />
+          <Input
+            value={form.nome}
+            onChangeText={(v) => handleChange("nome", v)}
+          />
 
           <Text style={styles.texto2}>CPF</Text>
           <MaskedTextInput
             mask="999.999.999-99"
             keyboardType="numeric"
             value={form.cpf}
-            onChangeText={v => handleChange('cpf', v)}
+            onChangeText={(v) => handleChange("cpf", v)}
             style={{
-              backgroundColor: 'rgba(142,196,110,0.6)',
+              backgroundColor: "rgba(142,196,110,0.6)",
               width: 300,
               height: 45,
               borderRadius: 25,
               paddingLeft: 15,
-              borderColor: 'rgba(40,55,32,0.6)',
+              borderColor: "rgba(40,55,32,0.6)",
               borderWidth: 1,
-              color: '#5b3000',
-              fontFamily: 'Quicksand-Regular',
+              color: "#5b3000",
+              fontFamily: "Quicksand-Regular",
             }}
           />
 
@@ -183,7 +194,9 @@ export function CadastroFam({ navigation }: any) {
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={form.parentesco}
-              onValueChange={itemValue => handleChange('parentesco', itemValue)}
+              onValueChange={(itemValue) =>
+                handleChange("parentesco", itemValue)
+              }
             >
               <Picker.Item label="Selecione" value="" />
               <Picker.Item label="Mãe" value="Mãe" />
@@ -201,40 +214,39 @@ export function CadastroFam({ navigation }: any) {
             mask="(99) 99999-9999"
             keyboardType="phone-pad"
             value={form.telefone}
-            onChangeText={v => handleChange('telefone', v)}
+            onChangeText={(v) => handleChange("telefone", v)}
             style={{
-              backgroundColor: 'rgba(142,196,110,0.6)',
+              backgroundColor: "rgba(142,196,110,0.6)",
               width: 300,
               height: 45,
               borderRadius: 25,
               paddingLeft: 15,
-              borderColor: 'rgba(40,55,32,0.6)',
+              borderColor: "rgba(40,55,32,0.6)",
               borderWidth: 1,
-              color: '#5b3000',
-              fontFamily: 'Quicksand-Regular',
+              color: "#5b3000",
+              fontFamily: "Quicksand-Regular",
             }}
           />
 
           <Text style={styles.texto2}>Data de Nascimento</Text>
           <TouchableOpacity
             style={{
-              backgroundColor: 'rgba(142,196,110,0.6)',
+              backgroundColor: "rgba(142,196,110,0.6)",
               width: 300,
               height: 45,
               borderRadius: 25,
-              borderColor: 'rgba(40,55,32,0.6)',
+              borderColor: "rgba(40,55,32,0.6)",
               borderWidth: 1,
-              justifyContent: 'center', // centraliza verticalmente
+              justifyContent: "center", // centraliza verticalmente
               // centraliza horizontalmente
             }}
             onPress={() => setShowDatePicker(true)}
           >
             <Text
               style={{
-                color: '#5b3000',
-                fontFamily: 'Quicksand-Regular',
+                color: "#5b3000",
+                fontFamily: "Quicksand-Regular",
                 marginHorizontal: 18, // pequena margem lateral
-
               }}
             >
               {formatarDataDisplay(form.nascimento)}
@@ -245,10 +257,10 @@ export function CadastroFam({ navigation }: any) {
             <DateTimePicker
               value={form.nascimento}
               mode="date"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              display={Platform.OS === "ios" ? "spinner" : "default"}
               onChange={(event, selectedDate) => {
                 setShowDatePicker(false);
-                if (selectedDate) handleChange('nascimento', selectedDate);
+                if (selectedDate) handleChange("nascimento", selectedDate);
               }}
             />
           )}
@@ -257,14 +269,18 @@ export function CadastroFam({ navigation }: any) {
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={form.estado}
-              onValueChange={itemValue => {
-                handleChange('estado', itemValue);
-                handleChange('cidade', '');
+              onValueChange={(itemValue) => {
+                handleChange("estado", itemValue);
+                handleChange("cidade", "");
               }}
             >
               <Picker.Item label="Selecione o Estado" value="" />
-              {estados.map(estado => (
-                <Picker.Item key={estado.id} label={estado.nome} value={estado.id} />
+              {estados.map((estado) => (
+                <Picker.Item
+                  key={estado.id}
+                  label={estado.nome}
+                  value={estado.id}
+                />
               ))}
             </Picker>
           </View>
@@ -276,25 +292,32 @@ export function CadastroFam({ navigation }: any) {
             ) : (
               <Picker
                 selectedValue={form.cidade}
-                onValueChange={itemValue => handleChange('cidade', itemValue)}
+                onValueChange={(itemValue) => handleChange("cidade", itemValue)}
                 enabled={!!form.estado}
               >
                 <Picker.Item label="Selecione a Cidade" value="" />
-                {cidades.map(cidade => (
-                  <Picker.Item key={cidade.id} label={cidade.nome} value={cidade.id} />
+                {cidades.map((cidade) => (
+                  <Picker.Item
+                    key={cidade.id}
+                    label={cidade.nome}
+                    value={cidade.id}
+                  />
                 ))}
               </Picker>
             )}
           </View>
 
           <Text style={styles.texto2}>Email</Text>
-          <Input value={form.email} onChangeText={v => handleChange('email', v)} />
+          <Input
+            value={form.email}
+            onChangeText={(v) => handleChange("email", v)}
+          />
 
           <Text style={styles.texto2}>Senha</Text>
           <Input
             secureTextEntry
             value={form.senha}
-            onChangeText={v => handleChange('senha', v)}
+            onChangeText={(v) => handleChange("senha", v)}
           />
         </View>
 

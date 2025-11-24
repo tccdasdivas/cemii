@@ -165,7 +165,7 @@ export function CadastroCuid({ navigation }: any) {
       await api.post("/auth/register", payload);
 
       Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-      navigation.navigate("HomeCuidador");
+      navigation.navigate("Home");
     } catch (error: any) {
       console.error("❌ Erro no cadastro:", error);
       const msg = error?.response?.data || "Erro ao cadastrar.";

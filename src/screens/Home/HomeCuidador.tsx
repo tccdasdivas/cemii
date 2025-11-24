@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
-  Modal,
 } from "react-native";
 import Fundo from "../../../assets/fundoHome.png";
 import { styles } from "./HomeStyles";
@@ -27,7 +26,6 @@ import { useFonts } from "expo-font";
 
 import { api } from "../../services/api";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModalFiltro } from "../../components/FiltroCuidador/ModalFiltro";
 
 interface Estado {
@@ -46,12 +44,9 @@ interface User {
   id: number;
   nome: string;
   telefone: number;
-  profissao: string;
   nascimento: Date;
   cidade: Cidade;
-  tipo: string;
-  diasHorarios: string;
-  experiencia: string;
+  necessidade: string | null;
 }
 
 export function calcularIdade(dataNascimento: string | Date): number {
@@ -62,7 +57,7 @@ export function calcularIdade(dataNascimento: string | Date): number {
   const mes = hoje.getMonth() - nascimento.getMonth();
 
   if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-    idade--; 
+    idade--;
   }
 
   return idade;
@@ -71,25 +66,14 @@ export function calcularIdade(dataNascimento: string | Date): number {
 //Aqui é a tela dos perfis dos responsaveis
 export function HomeCuidador() {
   const [modalFiltroVisivel, setModalFiltroVisivel] = useState(false);
-  const [filtroProfissao, setFiltroProfissao] = useState<string | null>(null);
-  const [filtroExperiencia, setFiltroExperiencia] = useState<boolean | null>(
-    null
-  );
+  const [filtroNecessidade, setFiltroNecessidade] = useState<"sim" | "nao" | null>(null);
+
   const [users, setUsers] = useState<User[]>([]);
   const [searchText, setSearchText] = useState("");
 
-  const [tipoUsuarioLogado, setTipoUsuarioLogado] = useState<string | null>(
-    null
-  );
-
-  const carregarTipoUsuario = async () => {
-    const tipo = await AsyncStorage.getItem("tipoUsuario");
-    setTipoUsuarioLogado(tipo);
-  };
-
   const getUsers = async () => {
     await api
-      .get("/usuarios")
+      .get("/idosos")
       .then((response) => {
         console.log(response.data);
 
@@ -102,7 +86,6 @@ export function HomeCuidador() {
 
   useFocusEffect(
     useCallback(() => {
-      carregarTipoUsuario();
       getUsers();
     }, [])
   );
@@ -115,42 +98,23 @@ export function HomeCuidador() {
 
   if (!fontsLoaded) return null;
 
-  const usuariosFiltrados = users.filter((user) => {
-    const tipoLogado = tipoUsuarioLogado?.toLowerCase();
-    const tipoUser = user.tipo.toLowerCase();
+  const usuariosFiltradosPorPesquisa = users
+  .filter((user) =>
+    user.nome.toLowerCase().includes(searchText.toLowerCase())
+  )
+  .filter((user) => {
+    if (filtroNecessidade === null) return true;
 
-    if (tipoLogado === "cuidador") {
-      return tipoUser === "responsavel";
+    if (filtroNecessidade === "sim") {
+      return user.necessidade !== null && user.necessidade !== "";
     }
-    if (tipoLogado === "responsavel") {
-      return tipoUser === "cuidador";
+
+    if (filtroNecessidade === "nao") {
+      return user.necessidade === null || user.necessidade === "";
     }
-    return false;
+
+    return true;
   });
-
-  const usuariosFiltradosPorPesquisa = usuariosFiltrados
-    .filter((user) =>
-      user.nome.toLowerCase().includes(searchText.toLowerCase())
-    )
-    .filter((user) => {
-      if (!filtroProfissao) return true;
-
-      const profissaoLower = user.profissao?.toLowerCase() || "";
-      const filtroLower = filtroProfissao.toLowerCase();
-
-      if (filtroLower === "outros") {
-        return profissaoLower.includes("cuidador") && profissaoLower.includes("enfermeiro");
-      }
-
-      return profissaoLower.includes(filtroLower);
-    })
-    .filter((user) =>
-      filtroExperiencia === null
-        ? true
-        : filtroExperiencia
-        ? !!user.experiencia
-        : !user.experiencia
-    );
 
   return (
     <ScrollView style={{ backgroundColor: "#faf8d4" }}>
@@ -174,7 +138,9 @@ export function HomeCuidador() {
           <View style={styles.box}>
             <View style={styles.menu}>
               <View style={styles.mensagem}>
-                <TouchableOpacity onPress={() => navigation.navigate("ChatCuidador")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("ChatCuidador")}
+                >
                   <Image source={Menssagem} style={styles.mensagemimg} />
                 </TouchableOpacity>
               </View>
@@ -186,7 +152,9 @@ export function HomeCuidador() {
                 </TouchableOpacity>
               </View>
               <View style={styles.oculos}>
-                <TouchableOpacity onPress={() => navigation.navigate("SobreCuidador")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("SobreCuidador")}
+                >
                   <Image source={Oculos} style={styles.oculosimg} />
                 </TouchableOpacity>
               </View>
@@ -206,10 +174,8 @@ export function HomeCuidador() {
               <ModalFiltro
                 visible={modalFiltroVisivel}
                 fechar={() => setModalFiltroVisivel(false)}
-                filtroProfissao={filtroProfissao}
-                setFiltroProfissao={setFiltroProfissao}
-                filtroExperiencia={filtroExperiencia}
-                setFiltroExperiencia={setFiltroExperiencia}
+                filtroNecessidade={filtroNecessidade}
+                setFiltroNecessidade={setFiltroNecessidade}
               />
             </View>
             {usuariosFiltradosPorPesquisa.map((user, index) => {
@@ -264,9 +230,8 @@ export function HomeCuidador() {
                       </View>
                     </View>
                     <View>
-                      <Text style={styles.texto3}>
-                        Idoso
-                      </Text>
+                      <Text style={styles.texto3}>Idoso</Text>
+                      <Text style={styles.texto3}>{user.necessidade}</Text>
                     </View>
                   </View>
                 </View>
