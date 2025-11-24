@@ -51,7 +51,24 @@ export function CadastroIdoso({ navigation }: any) {
     };
     fetchEstados();
   }, []);
+  const [usuarioLogado, setUsuarioLogado] = useState<any>(null);
 
+  // Carregar usuário logado
+  useEffect(() => {
+    const carregarUsuario = async () => {
+      try {
+        const usuario = await AsyncStorage.getItem("usuario");
+  
+        if (usuario) {
+          setUsuarioLogado(JSON.parse(usuario));
+        }
+      } catch (e) {
+        console.log("Erro ao carregar usuário", e);
+      }
+    };
+  
+    carregarUsuario();
+  }, []);
   // 📍 Carrega cidades ao selecionar estado
   useEffect(() => {
     if (form.estado) {
@@ -101,47 +118,54 @@ export function CadastroIdoso({ navigation }: any) {
       Alert.alert('Atenção', 'Preencha todos os campos obrigatórios.');
       return;
     }
-
+  
+    if (!usuarioLogado?.id) {
+      Alert.alert("Erro", "Usuário logado não encontrado.");
+      return;
+    }
+  
     setLoading(true);
+  
     try {
       const estadoSelecionado = estados.find(e => e.id === form.estado);
       const cidadeSelecionada = cidades.find(c => c.id === form.cidade);
-
+  
       if (!estadoSelecionado || !cidadeSelecionada) {
         Alert.alert('Erro', 'Selecione um estado e cidade válidos.');
         setLoading(false);
         return;
       }
-
+  
+      // 🚨 Payload CORRIGIDO para bater com o modelo Idoso
       const payload = {
-        name: form.nome,
-        cpf: form.cpf.replace(/\D/g, ''), // remove máscara
-        foto: 'https://placehold.co/100x100',
-        nascimento: formatarDataEnvio(form.nascimento),
-        cidade: {
-          id: cidadeSelecionada.id,
-          nome: cidadeSelecionada.nome,
-          estado: {
-            id: estadoSelecionado.id,
-            nome: estadoSelecionado.nome,
-            sigla: estadoSelecionado.sigla,
-          },
-        },
+        nome: form.nome, // CORRIGIDO
+        cpf: form.cpf.replace(/\D/g, ''),
+        foto: "https://placehold.co/100x100",
         necessidade: form.necessidade,
+        logradouro: form.logradouro,
         numero: form.numero,
-        logradouro: form.logradouro
+        nascimento: formatarDataEnvio(form.nascimento),
+  
+        cidade: {
+          id: cidadeSelecionada.id
+        },
+  
+        // 🔥 Responsável logado obrigatório
+        responsavel: {
+          id: usuarioLogado.id
+        }
       };
-
-      console.log('📦 Enviando para /auth/register', payload);
-
-      await api.post('/auth/register', payload);
-
-      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-      navigation.navigate('Home');
+  
+      console.log("📦 ENVIANDO PARA /idosos:", payload);
+  
+      await api.post("/idosos", payload);
+  
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+      navigation.navigate("Home");
+  
     } catch (error: any) {
-      console.error('❌ Erro no cadastro:', error);
-      const msg = error?.response?.data || 'Erro ao cadastrar.';
-      Alert.alert('Erro', String(msg));
+      console.log("❌ Erro no cadastro", error.response?.data || error);
+      Alert.alert("Erro", error.response?.data?.mensagem || "Erro ao cadastrar.");
     } finally {
       setLoading(false);
     }
