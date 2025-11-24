@@ -88,21 +88,32 @@ export function HomeResponsavel() {
   };
 
   const getUsers = async () => {
-    await api
-      .get("/usuarios")
-      .then((response) => {
-        console.log(response.data);
-
-        setUsers(response.data);
-      })
-      .catch((err: any) => {
-        Alert.alert("Ops", err.response?.data?.erros ?? "Tente novamente!");
-      });
+    try {
+      const response = await api.get("/usuarios");
+      const data = response.data;
+  
+      console.log("API retornou:", data);
+  
+      // Garante que SEMPRE será um array
+      if (Array.isArray(data)) {
+        setUsers(data);
+      } else if (Array.isArray(data?.usuarios)) {
+        setUsers(data.usuarios);
+      } else {
+        setUsers([]); // evita erro quando não há usuários
+      }
+  
+    } catch (err: any) {
+      Alert.alert("Ops", err.response?.data?.erros ?? "Tente novamente!");
+    }
   };
+
+  useEffect(() => {
+    carregarTipoUsuario();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      carregarTipoUsuario();
       getUsers();
     }, [])
   );
@@ -114,6 +125,16 @@ export function HomeResponsavel() {
   });
 
   if (!fontsLoaded) return null;
+
+  if (!tipoUsuarioLogado) {
+    console.log("⏳ Tipo do usuário ainda não carregou");
+    return (
+      <View>
+        <Text>Carregando...</Text>
+      </View>
+    );
+  }
+  
 
   const usuariosFiltrados = users.filter((user) => {
     const tipoLogado = tipoUsuarioLogado?.toLowerCase();

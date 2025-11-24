@@ -137,6 +137,8 @@ export function CadastroFam({ navigation }: any) {
 
       const response = await api.post("/auth/register", payload);
 
+      await AsyncStorage.setItem("usuarioId", String(response.data.id));
+
       Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
       navigation.navigate('Idoso');
     } catch (error: any) {

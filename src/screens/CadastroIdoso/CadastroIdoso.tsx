@@ -53,17 +53,16 @@ export function CadastroIdoso({ navigation }: any) {
   }, []);
   const [usuarioLogado, setUsuarioLogado] = useState<any>(null);
 
-  // Carregar usuário logado
   useEffect(() => {
     const carregarUsuario = async () => {
       try {
-        const usuario = await AsyncStorage.getItem("usuario");
+        const id = await AsyncStorage.getItem("usuarioId");
   
-        if (usuario) {
-          setUsuarioLogado(JSON.parse(usuario));
+        if (id) {
+          setUsuarioLogado({ id: Number(id) });
         }
       } catch (e) {
-        console.log("Erro ao carregar usuário", e);
+        console.log("Erro ao carregar ID do usuário", e);
       }
     };
   
@@ -161,7 +160,7 @@ export function CadastroIdoso({ navigation }: any) {
       await api.post("/idosos", payload);
   
       Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-      navigation.navigate("Home");
+      navigation.navigate("HomeResponsavel");
   
     } catch (error: any) {
       console.log("❌ Erro no cadastro", error.response?.data || error);
