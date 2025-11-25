@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#faf8d4",
     borderRadius: 50,
     marginTop: 100,
-    height: 100,
+    height: 150,
     width: "100%",
     alignItems: "center",
   },
@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
   textos: {
     justifyContent: "space-between",
     flexDirection: "row",
-    marginTop: 15,
+    marginTop:-50,
   },
   texto1: {
     color: "#5b3000",

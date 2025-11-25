@@ -19,6 +19,8 @@ import { styles } from "./CadastroCuidStyles";
 import { Input } from "../../components/TextInput/Input";
 import Texto from "../../../assets/dados.png";
 import { Btn } from "../../components/Btn/Btn";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { launchImageLibrary } from "react-native-image-picker";
 
 export function CadastroCuid({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
@@ -43,6 +45,25 @@ export function CadastroCuid({ navigation }: any) {
 
   const [profissaoLivre, setProfissaoLivre] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [diasSelecionados, setDiasSelecionados] = useState<any[]>([]);
+  const [modalDias, setModalDias] = useState(false);
+  const [temExperiencia, setTemExperiencia] = useState<boolean | null>(null);
+
+  const idadeMinima = 18;
+  const dataMaximaPermitida = new Date();
+  dataMaximaPermitida.setFullYear(dataMaximaPermitida.getFullYear() - idadeMinima);
+
+  const diasSemana = [
+    { key: "seg", label: "Segunda" },
+    { key: "ter", label: "Terça" },
+    { key: "qua", label: "Quarta" },
+    { key: "qui", label: "Quinta" },
+    { key: "sex", label: "Sexta" },
+    { key: "sab", label: "Sábado" },
+    { key: "dom", label: "Domingo" },
+  ];
+
+  const periodos = ["Manhã", "Tarde", "Noite"];
 
   // 🔹 Buscar estados
   useEffect(() => {
@@ -162,10 +183,17 @@ export function CadastroCuid({ navigation }: any) {
 
       console.log("📦 Enviando para /auth/register:", payload);
 
-      await api.post("/auth/register", payload);
+      const response = await api.post("/auth/register", payload);
+
+      const usuarioCadastrado = response.data;
+
+      // Salvar token e dados do usuário localmente
+      await AsyncStorage.setItem("token", usuarioCadastrado.token);
+      await AsyncStorage.setItem("user", JSON.stringify(usuarioCadastrado));
+      await AsyncStorage.setItem("tipoUsuario", "CUIDADOR");
 
       Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-      navigation.navigate("Home");
+      navigation.navigate("HomeCuidador");
     } catch (error: any) {
       console.error("❌ Erro no cadastro:", error);
       const msg = error?.response?.data || "Erro ao cadastrar.";
@@ -174,22 +202,6 @@ export function CadastroCuid({ navigation }: any) {
       setLoading(false);
     }
   };
-
-  const diasSemana = [
-    { key: "seg", label: "Segunda" },
-    { key: "ter", label: "Terça" },
-    { key: "qua", label: "Quarta" },
-    { key: "qui", label: "Quinta" },
-    { key: "sex", label: "Sexta" },
-    { key: "sab", label: "Sábado" },
-    { key: "dom", label: "Domingo" },
-  ];
-
-  const periodos = ["Manhã", "Tarde", "Noite"];
-
-  const [modalDias, setModalDias] = useState(false);
-
-  const [diasSelecionados, setDiasSelecionados] = useState<any[]>([]);
 
   const toggleDiaHorario = (diaKey: string, periodo: string) => {
     const existe = diasSelecionados.some(
@@ -207,14 +219,6 @@ export function CadastroCuid({ navigation }: any) {
     }
   };
 
-  const [temExperiencia, setTemExperiencia] = useState<boolean | null>(null);
-
-  const idadeMinima = 18;
-
-  const dataMaximaPermitida = new Date();
-  dataMaximaPermitida.setFullYear(
-    dataMaximaPermitida.getFullYear() - idadeMinima
-  );
   return (
     <ScrollView style={{ backgroundColor: "#faf8d4" }}>
       <View style={styles.container}>
@@ -366,13 +370,12 @@ export function CadastroCuid({ navigation }: any) {
               {diasSelecionados.length === 0
                 ? "Selecionar dias e horários"
                 : diasSelecionados
-                    .map(
-                      (item) =>
-                        `${
-                          diasSemana.find((d) => d.key === item.dia)?.label
-                        } – ${item.periodo}`
-                    )
-                    .join(", ")}
+                  .map(
+                    (item) =>
+                      `${diasSemana.find((d) => d.key === item.dia)?.label
+                      } – ${item.periodo}`
+                  )
+                  .join(", ")}
             </Text>
           </TouchableOpacity>
 

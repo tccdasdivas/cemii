@@ -146,6 +146,12 @@ export function CadastroFam({ navigation }: any) {
 
       const response = await api.post("/auth/register", payload);
 
+      const usuarioCadastrado = response.data;
+
+      await AsyncStorage.setItem("token", usuarioCadastrado.token);
+      await AsyncStorage.setItem("user", JSON.stringify(usuarioCadastrado));
+      await AsyncStorage.setItem("tipoUsuario", "CUIDADOR");
+
       await AsyncStorage.setItem("userId", String(response.data.id));
 
       Alert.alert("Sucesso", "Cadastro realizado com sucesso!");

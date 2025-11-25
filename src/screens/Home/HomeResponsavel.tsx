@@ -117,9 +117,6 @@ export function HomeResponsavel() {
 
   if (!fontsLoaded) return null;
 
-  // =========================
-  // Filtra usuários de forma segura
-  // =========================
   const usuariosFiltrados: User[] = Array.isArray(users)
     ? users.filter((user) => {
         const tipoLogado = tipoUsuarioLogado?.toLowerCase();
@@ -152,9 +149,7 @@ export function HomeResponsavel() {
         : !user.experiencia
     );
 
-  // =========================
-  // Renderização
-  // =========================
+  
   return (
     <ScrollView style={{ backgroundColor: "#faf8d4" }}>
       <View style={styles.container}>
