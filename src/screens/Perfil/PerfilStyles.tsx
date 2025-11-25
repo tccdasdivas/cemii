@@ -1,93 +1,126 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
-  imagem:{
-    width:'100%',
-    height:400,
-    position:'absolute'
+  imagem: {
+    width: "100%",
+    height: 400,
+    position: "absolute",
   },
-  seta:{
-    color:'#5b3000',
-    borderColor:'#c89a65',
-    borderWidth:3,
-    borderRadius:50,
-    backgroundColor:'#ece3b8'
+  seta: {
+    color: "#5b3000",
+    borderColor: "#c89a65",
+    borderWidth: 3,
+    borderRadius: 50,
+    backgroundColor: "#ece3b8",
   },
-  icone:{ 
-    width:'12%', 
-    alignItems:'center', 
-    marginLeft:15, 
-    marginTop:30
+  icone: {
+    width: "12%",
+    alignItems: "center",
+    marginLeft: 15,
+    marginTop: 30,
   },
-  imgbidu:{
-    borderRadius:90,
-    borderColor:'#c89a65',
-    borderWidth:3,
-    width:180,
-    height:180,
-    position:'absolute', 
-    marginTop:30
+  imgbidu: {
+    borderRadius: 90,
+    borderColor: "#c89a65",
+    borderWidth: 3,
+    width: 180,
+    height: 180,
+    position: "absolute",
+    marginTop: 30,
   },
-   box:{
-    backgroundColor:'#faf8d4',
-    borderRadius:50,
-    marginTop:10,
-    height:500,
-    width:'100%',
-    alignItems:'center',
-    borderColor:'#c89a65',
-    borderWidth:2,
+  box: {
+    backgroundColor: "#faf8d4",
+    borderRadius: 50,
+    marginTop: 10,
+    width: "100%",
+    height:"100%",
+    alignItems: "center",
+    borderColor: "#c89a65",
+    borderWidth: 2,
   },
-  box2:{
-    backgroundColor:'#e7d5ab',
-    borderRadius:50,
-    marginTop:50,
-    height:300,
-    width:'80%',
-    alignItems:'center',
-    justifyContent:'center'
+  box2: {
+    backgroundColor: "#e7d5ab",
+    borderRadius: 50,
+    marginTop: 50,
+    width: "80%",
+    alignItems: "center",
+    justifyContent: "center",
+    padding:5
   },
-  box3:{
-    backgroundColor:'#faf8d4',
-    borderRadius:50,
-    height:280,
-    width:'94%',
-    justifyContent: 'center'
+  box3: {
+    backgroundColor: "#faf8d4",
+    borderRadius: 50,
+    padding:15,
+    width: "94%",
+    justifyContent: "center",
   },
-  texto:{
-    color:'#725431',
-    fontFamily:'Quicksand-Bold',
-    fontSize:25,
-    marginLeft:10,
-    marginTop:10,
+  texto: {
+    color: "#725431",
+    fontFamily: "Quicksand-Bold",
+    fontSize: 25,
+    marginLeft: 10,
+    marginTop: 10,
   },
-  texto1:{
-    color:'#725431',
-    fontFamily:'Quicksand-Regular',
-    fontSize:25,
-    marginLeft:10
+  texto1: {
+    color: "#725431",
+    fontFamily: "Quicksand-Regular",
+    fontSize: 25,
+    marginLeft: 10,
   },
-  texto2:{
-    color:'#725431',
-    fontFamily:'Quicksand-Regular',
-    fontSize:25,
-    marginTop:40,
-    marginLeft:10
+  texto2: {
+    color: "#725431",
+    fontFamily: "Quicksand-Regular",
+    fontSize: 25,
+    marginTop: 40,
+    marginLeft: 10,
   },
-  pencil:{
-    marginTop:165,
-    marginLeft:100,
-    backgroundColor:'#faf8d4',
-    borderColor:'#c89a65',
-    borderWidth:3,
-    borderRadius:30,
-    height:50,
-    width:50,
-    alignItems:'center',
-    justifyContent:'center'
-  }
+  pencil: {
+    marginTop: 165,
+    marginLeft: 100,
+    backgroundColor: "#faf8d4",
+    borderColor: "#c89a65",
+    borderWidth: 3,
+    borderRadius: 30,
+    height: 50,
+    width: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputEdit: {
+    backgroundColor: "#fff",
+    borderColor: "#c89a65",
+    borderWidth: 2,
+    borderRadius: 20,
+    fontSize: 22,
+    padding: 10,
+    marginTop: 20,
+    marginHorizontal: 10,
+    color: "#725431",
+    fontFamily: "Quicksand-Regular",
+  },
+
+  btnSalvar: {
+    backgroundColor: "#725431",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+
+  btnCancelar: {
+    backgroundColor: "#c89a65",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+  },
+
+  btnSalvarTxt: {
+    color: "#fff",
+    fontSize: 18,
+    fontFamily: "Quicksand-Bold",
+  },
 });

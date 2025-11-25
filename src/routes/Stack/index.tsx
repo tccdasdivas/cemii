@@ -11,13 +11,15 @@ import { HomeResponsavel } from "../../screens/Home/HomeResponsavel";
 import { SobreCuidador } from "../../screens/Sobre/SobreCuidador";
 import { FavoritosCuidador } from "../../screens/Favoritos/FavotitosCuidador";
 import { Menssagem } from "../../screens/Menssagem/Menssagem";
-import { Perfil } from "../../screens/Perfil/Perfil";
+import { PerfilCuidador } from "../../screens/Perfil/PerfilCuidador";
 import { InformacoesPerfil } from "../../screens/InformacoesPerfil/InformacoesPerfil";
 import { SobreResponsavel } from "../../screens/Sobre/SobreResponsavel";
 import { FavoritosResponsavel } from "../../screens/Favoritos/FavotitosResponsavel";
 import { ChatCuidadador } from "../../screens/Chat/ChatCuidador";
 import { ChatResponsavel } from "../../screens/Chat/ChatResponsavel";
 import { HomeCuidador } from "../../screens/Home/HomeCuidador";
+import { PerfilResponsavel } from "../../screens/Perfil/PerfilResponsavel";
+
 
 const { Navigator, Screen}= createNativeStackNavigator()
 
@@ -39,8 +41,10 @@ export default function(){
             <Screen name="ChatCuidador" component={ChatCuidadador}/>
             <Screen name="ChatResponsavel" component={ChatResponsavel}/>
             <Screen name="Menssagem" component={Menssagem}/>
-            <Screen name="Perfil" component={Perfil}/>
+            <Screen name="PerfilCuidador" component={PerfilCuidador}/>
+             <Screen name="PerfilResponsavel" component={PerfilResponsavel}/>
             <Screen name="Informacao" component={InformacoesPerfil}/>
+            
         </Navigator>
     )
 }

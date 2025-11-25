@@ -72,15 +72,10 @@ export function calcularIdade(dataNascimento: string | Date): number {
 export function HomeResponsavel() {
   const [modalFiltroVisivel, setModalFiltroVisivel] = useState(false);
   const [filtroProfissao, setFiltroProfissao] = useState<string | null>(null);
-  const [filtroExperiencia, setFiltroExperiencia] = useState<boolean | null>(
-    null
-  );
+  const [filtroExperiencia, setFiltroExperiencia] = useState<boolean | null>(null);
   const [users, setUsers] = useState<User[]>([]);
   const [searchText, setSearchText] = useState("");
-
-  const [tipoUsuarioLogado, setTipoUsuarioLogado] = useState<string | null>(
-    null
-  );
+  const [tipoUsuarioLogado, setTipoUsuarioLogado] = useState<string | null>(null);
 
   const carregarTipoUsuario = async () => {
     const tipo = await AsyncStorage.getItem("tipoUsuario");
@@ -88,16 +83,24 @@ export function HomeResponsavel() {
   };
 
   const getUsers = async () => {
-    await api
-      .get("/usuarios")
-      .then((response) => {
-        console.log(response.data);
+    try {
+      const response = await api.get("/usuarios");
 
-        setUsers(response.data);
-      })
-      .catch((err: any) => {
-        Alert.alert("Ops", err.response?.data?.erros ?? "Tente novamente!");
-      });
+      // Garante que users sempre será um array
+      let usersArray: User[] = [];
+      if (Array.isArray(response.data)) {
+        usersArray = response.data;
+      } else if (Array.isArray(response.data.usuarios)) {
+        usersArray = response.data.usuarios;
+      } else {
+        console.warn("Resposta inesperada da API:", response.data);
+      }
+
+      setUsers(usersArray);
+    } catch (err: any) {
+      Alert.alert("Ops", err.response?.data?.erros ?? "Tente novamente!");
+      setUsers([]); // previne filtro em undefined
+    }
   };
 
   useFocusEffect(
@@ -108,40 +111,37 @@ export function HomeResponsavel() {
   );
 
   const navigation = useNavigation();
-
   const [fontsLoaded] = useFonts({
     "Brixton-Regular": require("../../../assets/fonts/Brixton/Brixton-Regular.otf"),
   });
 
   if (!fontsLoaded) return null;
 
-  const usuariosFiltrados = users.filter((user) => {
-    const tipoLogado = tipoUsuarioLogado?.toLowerCase();
-    const tipoUser = user.tipo.toLowerCase();
+  // =========================
+  // Filtra usuários de forma segura
+  // =========================
+  const usuariosFiltrados: User[] = Array.isArray(users)
+    ? users.filter((user) => {
+        const tipoLogado = tipoUsuarioLogado?.toLowerCase();
+        const tipoUser = user.tipo?.toLowerCase() ?? "";
 
-    if (tipoLogado === "cuidador") {
-      return tipoUser === "responsavel";
-    }
-    if (tipoLogado === "responsavel") {
-      return tipoUser === "cuidador";
-    }
-    return false;
-  });
+        if (tipoLogado === "cuidador") return tipoUser === "responsavel";
+        if (tipoLogado === "responsavel") return tipoUser === "cuidador";
+        return false;
+      })
+    : [];
 
-  const usuariosFiltradosPorPesquisa = usuariosFiltrados
+  const usuariosFiltradosPorPesquisa: User[] = usuariosFiltrados
     .filter((user) =>
-      user.nome.toLowerCase().includes(searchText.toLowerCase())
+      user.nome?.toLowerCase().includes(searchText.toLowerCase())
     )
     .filter((user) => {
       if (!filtroProfissao) return true;
-
       const profissaoLower = user.profissao?.toLowerCase() || "";
       const filtroLower = filtroProfissao.toLowerCase();
-
       if (filtroLower === "outros") {
         return profissaoLower.includes("cuidador") && profissaoLower.includes("enfermeiro");
       }
-
       return profissaoLower.includes(filtroLower);
     })
     .filter((user) =>
@@ -152,12 +152,15 @@ export function HomeResponsavel() {
         : !user.experiencia
     );
 
+  // =========================
+  // Renderização
+  // =========================
   return (
     <ScrollView style={{ backgroundColor: "#faf8d4" }}>
       <View style={styles.container}>
         <ImageBackground source={Fundo} style={styles.imagem} />
         <View style={styles.icone}>
-          <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+          <TouchableOpacity onPress={() => navigation.navigate("PerfilResponsavel")}>
             <Ionicons name="person" size={30} style={styles.perfil} />
           </TouchableOpacity>
         </View>
@@ -170,6 +173,7 @@ export function HomeResponsavel() {
             onChangeText={setSearchText}
           />
         </View>
+
         <View style={styles.container2}>
           <View style={styles.box}>
             <View style={styles.menu}>
@@ -179,9 +183,7 @@ export function HomeResponsavel() {
                 </TouchableOpacity>
               </View>
               <View style={styles.coracao}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("FavoritosResponsavel")}
-                >
+                <TouchableOpacity onPress={() => navigation.navigate("FavoritosResponsavel")}>
                   <FontAwesome name="heart" size={35} color="#e39694" />
                 </TouchableOpacity>
               </View>
@@ -212,26 +214,23 @@ export function HomeResponsavel() {
                 setFiltroExperiencia={setFiltroExperiencia}
               />
             </View>
-            {usuariosFiltradosPorPesquisa.map((user, index) => {
-              const backgroundColor =
-                index % 2 === 0
-                  ? "rgba(142, 196, 110, 0.4)"
-                  : "rgba(127, 169, 199, 0.4)";
 
-              // Parse da string JSON de forma segura
+            {usuariosFiltradosPorPesquisa.map((user, index) => {
+              const backgroundColor = index % 2 === 0
+                ? "rgba(142, 196, 110, 0.4)"
+                : "rgba(127, 169, 199, 0.4)";
+
+              // Parse diasHorarios de forma segura
               let diasHorariosArray: { dia: string; periodo: string }[] = [];
               if (user.diasHorarios) {
                 try {
                   const parsed = JSON.parse(user.diasHorarios);
-                  if (Array.isArray(parsed)) {
-                    diasHorariosArray = parsed;
-                  }
+                  if (Array.isArray(parsed)) diasHorariosArray = parsed;
                 } catch (error) {
                   console.log("Erro ao parsear dias_horarios:", error);
                 }
               }
 
-              // Mapear abreviações para nomes completos
               const diasMap: Record<string, string> = {
                 seg: "Segunda",
                 ter: "Terça",
@@ -245,9 +244,7 @@ export function HomeResponsavel() {
               const disponibilidadePorDia: Record<string, string[]> = {};
               diasHorariosArray.forEach(({ dia, periodo }) => {
                 const nomeDia = diasMap[dia] || dia;
-                if (!disponibilidadePorDia[nomeDia]) {
-                  disponibilidadePorDia[nomeDia] = [];
-                }
+                if (!disponibilidadePorDia[nomeDia]) disponibilidadePorDia[nomeDia] = [];
                 disponibilidadePorDia[nomeDia].push(periodo);
               });
 
@@ -256,58 +253,39 @@ export function HomeResponsavel() {
                 .join(", ");
 
               return (
-                <View
-                  style={[styles.contperfil1, { backgroundColor }]}
-                  key={user.id}
-                >
+                <View style={[styles.contperfil1, { backgroundColor }]} key={user.id}>
                   <View style={styles.boxperfil1}>
                     <View style={{ flexDirection: "row" }}>
                       <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate("Informacao", { userId: user.id })
-                        }
+                        onPress={() => navigation.navigate("Informacao", { userId: user.id })}
                         style={{ width: "17%" }}
                       >
                         <Ionicons
                           name="person"
                           size={40}
-                          style={[
-                            styles.perfil1,
-                            {
-                              borderColor:
-                                index % 2 === 0 ? "#7fa9c7" : "#8ec46e",
-                            },
-                          ]}
+                          style={[styles.perfil1, { borderColor: index % 2 === 0 ? "#7fa9c7" : "#8ec46e" }]}
                         />
                       </TouchableOpacity>
+
                       <View style={{ marginLeft: 5 }}>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
                           <Text style={styles.texto1}>{user.nome} |</Text>
-                          <Text style={styles.texto1}>
-                            {" "}
-                            {calcularIdade(user.nascimento)} anos
-                          </Text>
+                          <Text style={styles.texto1}> {calcularIdade(user.nascimento)} anos</Text>
                         </View>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
                           <Text style={styles.texto3}>
-                            Localização: {user.cidade?.nome} -{" "}
-                            {user.cidade?.estado?.sigla}{" "}
+                            Localização: {user.cidade?.nome} - {user.cidade?.estado?.sigla}
                           </Text>
                         </View>
                       </View>
                     </View>
+
                     <View>
                       <Text style={styles.texto3}>
                         Disponibilidade: {diasHorariosTexto || "Não informado"}
                       </Text>
                       <Text style={styles.texto3}>{user.profissao}</Text>
-                      <Text style={styles.texto3}>
-                        {user.experiencia || "Sem experiência na área"}
-                      </Text>
+                      <Text style={styles.texto3}>{user.experiencia || "Sem experiência na área"}</Text>
                     </View>
                   </View>
                 </View>

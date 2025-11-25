@@ -121,7 +121,7 @@ export function HomeCuidador() {
       <View style={styles.container}>
         <ImageBackground source={Fundo} style={styles.imagem} />
         <View style={styles.icone}>
-          <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
+          <TouchableOpacity onPress={() => navigation.navigate("PerfilCuidador")}>
             <Ionicons name="person" size={30} style={styles.perfil} />
           </TouchableOpacity>
         </View>

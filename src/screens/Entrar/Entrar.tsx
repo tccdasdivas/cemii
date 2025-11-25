@@ -44,13 +44,13 @@ export function Entrar({ navigation }: any) {
 
       const response = await api.post("/auth/login", payload);
 
-      // Se o backend retorna token e usuário:
       console.log("✅ Login bem-sucedido:", response.data);
 
-      // Você pode salvar o token se quiser (ex: AsyncStorage)
+      
       await AsyncStorage.setItem("token", response.data.token);
       await AsyncStorage.setItem("tipoUsuario", response.data.tipo);
       await AsyncStorage.setItem("idUsuario", String(response.data.id));
+      await AsyncStorage.setItem("user", JSON.stringify(response.data));
 
       Alert.alert("Sucesso", "Login realizado com sucesso!");
       if (response.data.tipo === "CUIDADOR") {
