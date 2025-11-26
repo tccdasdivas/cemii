@@ -21,6 +21,7 @@ import Texto from "../../../assets/dados.png";
 import { Btn } from "../../components/Btn/Btn";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FotoPicker } from "../../components/FotoPicker/FotoPicker";
+import * as FileSystem from "expo-file-system";
 
 
 
@@ -128,93 +129,128 @@ export function CadastroCuid({ navigation }: any) {
     return `${ano}-${mes}-${dia}`;
   };
 
-  // 🔹 Envio do formulário
- const handleSubmit = async () => {
-  // Validação básica
-  if (!form.nome || !form.email || !form.senha || !form.estado || !form.cidade) {
-    Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const estadoSelecionado = estados.find((e) => e.id === form.estado);
-    const cidadeSelecionada = cidades.find((c) => c.id === form.cidade);
-
-    if (!estadoSelecionado || !cidadeSelecionada) {
-      Alert.alert("Erro", "Selecione um estado e cidade válidos.");
-      setLoading(false);
+  const handleSubmit = async () => {
+    // Validação básica
+    if (!form.nome || !form.email || !form.senha || !form.estado || !form.cidade) {
+      Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
       return;
     }
-
-    // Monta FormData para envio
-    const formData = new FormData();
-
-    formData.append("name", form.nome);
-    formData.append("email", form.email);
-    formData.append("password", form.senha);
-    formData.append("telefone", form.telefone.replace(/\D/g, ""));
-    formData.append("cpf", form.cpf.replace(/\D/g, ""));
-    formData.append("nascimento", formatarDataEnvio(form.nascimento));
-
-    // Profissão e COREN
-    const profissaoFinal =
-      form.profissao === "Outra"
-        ? profissaoLivre.trim() || "Outra"
-        : form.profissao || "Não informado";
-
-    formData.append("profissao", profissaoFinal);
-    formData.append("coren", form.coren);
-
-    // Dias e horários
-    formData.append("diasHorarios", JSON.stringify(diasSelecionados));
-
-    // Experiência
-    formData.append("experiencia", form.experiencia);
-
-    // Cidade e estado
-    formData.append("cidade[id]", String(cidadeSelecionada.id));
-    formData.append("cidade[nome]", cidadeSelecionada.nome);
-    formData.append("cidade[estado][id]", String(estadoSelecionado.id));
-    formData.append("cidade[estado][nome]", estadoSelecionado.nome);
-    formData.append("cidade[estado][sigla]", estadoSelecionado.sigla);
-
-    // Tipo de usuário
-    formData.append("tipo", "CUIDADOR");
-
-    // Adiciona foto apenas como arquivo (se houver)
-    if (imagem) {
-      formData.append("foto", {
-        uri: imagem,
-        type: "image/jpeg", // ou "image/png"
-        name: "foto.jpg",
-      } as any);
+  
+    setLoading(true);
+  
+    try {
+      const estadoSelecionado = estados.find((e) => e.id === form.estado);
+      const cidadeSelecionada = cidades.find((c) => c.id === form.cidade);
+  
+      if (!estadoSelecionado || !cidadeSelecionada) {
+        Alert.alert("Erro", "Selecione um estado e cidade válidos.");
+        setLoading(false);
+        return;
+      }
+  
+      // Monta FormData
+      const formData = new FormData();
+  
+      formData.append("name", form.nome);
+      formData.append("email", form.email);
+      formData.append("password", form.senha);
+      formData.append("telefone", form.telefone.replace(/\D/g, ""));
+      formData.append("cpf", form.cpf.replace(/\D/g, ""));
+      formData.append("nascimento", formatarDataEnvio(form.nascimento));
+  
+      // Profissão e COREN
+      const profissaoFinal =
+        form.profissao === "Outra"
+          ? profissaoLivre.trim() || "Outra"
+          : form.profissao || "Não informado";
+      formData.append("profissao", profissaoFinal);
+      formData.append("coren", form.coren);
+  
+      // Dias e horários
+      formData.append("diasHorarios", JSON.stringify(diasSelecionados));
+  
+      // Experiência
+      formData.append("experiencia", form.experiencia);
+  
+      // Cidade e estado
+      formData.append("cidadeId", String(cidadeSelecionada.id));
+      formData.append("cidadeNome", cidadeSelecionada.nome);
+      formData.append("estadoId", String(estadoSelecionado.id));
+      formData.append("estadoNome", estadoSelecionado.nome);
+      formData.append("estadoSigla", estadoSelecionado.sigla);
+  
+      // Tipo de usuário
+      formData.append("tipo", "CUIDADOR");
+  
+      // Foto (opcional)
+      if (imagem) {
+        try {
+          const fileInfo = await FileSystem.getInfoAsync(imagem);
+  
+          if (!fileInfo.exists) {
+            Alert.alert("Erro", "Arquivo de imagem não encontrado.");
+            setLoading(false);
+            return;
+          }
+  
+          const extension = imagem.split(".").pop()?.toLowerCase();
+          let mimeType = "image/jpeg";
+          if (extension === "png") mimeType = "image/png";
+  
+          formData.append("foto", {
+            uri:
+              Platform.OS === "android"
+                ? fileInfo.uri
+                : fileInfo.uri.replace("file://", ""),
+            type: mimeType,
+            name: `foto.${extension || "jpg"}`,
+          } as any);
+        } catch (err) {
+          console.error("Erro ao processar imagem:", err);
+          Alert.alert("Erro", "Não foi possível processar a imagem.");
+          setLoading(false);
+          return;
+        }
+      }
+  
+      // Envio para backend
+      const response = await api.post("/auth/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
+      const usuarioCadastrado = response.data;
+  
+      // Salva dados leves no AsyncStorage
+      await AsyncStorage.setItem("token", usuarioCadastrado.token);
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify({ ...usuarioCadastrado, foto: undefined })
+      );
+      await AsyncStorage.setItem("tipoUsuario", "CUIDADOR");
+  
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+      navigation.navigate("HomeCuidador");
+    } catch (error: any) {
+      console.error("❌ Erro no cadastro:", error);
+  
+      if (error.response) {
+        Alert.alert(
+          "Erro",
+          `Erro do servidor: ${JSON.stringify(error.response.data)}`
+        );
+      } else if (error.request) {
+        Alert.alert(
+          "Erro",
+          "Sem resposta do servidor. Verifique o IP/porta do backend ou a conexão."
+        );
+      } else {
+        Alert.alert("Erro", error.message || "Erro ao cadastrar.");
+      }
+    } finally {
+      setLoading(false);
     }
+  };
 
-    // Envia para o backend
-    const response = await api.post("/auth/register", formData );
-
-    const usuarioCadastrado = response.data;
-
-    // Salva apenas dados leves no AsyncStorage
-    await AsyncStorage.setItem("token", usuarioCadastrado.token);
-    await AsyncStorage.setItem(
-      "user",
-      JSON.stringify({ ...usuarioCadastrado, foto: undefined })
-    );
-    await AsyncStorage.setItem("tipoUsuario", "CUIDADOR");
-
-    Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-    navigation.navigate("HomeCuidador");
-  } catch (error: any) {
-    console.error("❌ Erro no cadastro:", error);
-    const msg = error?.response?.data || "Erro ao cadastrar.";
-    Alert.alert("Erro", String(msg));
-  } finally {
-    setLoading(false);
-  }
-};
 
 
   const toggleDiaHorario = (diaKey: string, periodo: string) => {
@@ -384,13 +420,12 @@ export function CadastroCuid({ navigation }: any) {
               {diasSelecionados.length === 0
                 ? "Selecionar dias e horários"
                 : diasSelecionados
-                    .map(
-                      (item) =>
-                        `${
-                          diasSemana.find((d) => d.key === item.dia)?.label
-                        } – ${item.periodo}`
-                    )
-                    .join(", ")}
+                  .map(
+                    (item) =>
+                      `${diasSemana.find((d) => d.key === item.dia)?.label
+                      } – ${item.periodo}`
+                  )
+                  .join(", ")}
             </Text>
           </TouchableOpacity>
 
