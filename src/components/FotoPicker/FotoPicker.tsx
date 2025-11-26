@@ -23,14 +23,16 @@ export function FotoPicker({ imagem, setImagem, label }: FotoPickerProps) {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+     mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.7,
       allowsEditing: true,
       aspect: [1, 1],
+      base64: true,
     });
 
     if (!result.canceled) {
-      setImagem(result.assets[0].uri);
+       const base64Img = result.assets[0].base64!;
+      setImagem(base64Img);
     }
   };
 
@@ -40,7 +42,11 @@ export function FotoPicker({ imagem, setImagem, label }: FotoPickerProps) {
 
       <TouchableOpacity style={styles.fotoButton} onPress={selecionarImagem}>
         {imagem ? (
-          <Image source={{ uri: imagem }} style={styles.fotoPreview} />
+          // Exibir a imagem convertendo o base64 para data-uri
+          <Image
+            source={{ uri: `data:image/jpeg;base64,${imagem}` }}
+            style={styles.fotoPreview}
+          />
         ) : (
           <Text style={styles.fotoTexto}>Selecionar foto</Text>
         )}

@@ -2,11 +2,12 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   label: {
-    fontSize: 16,
-    marginBottom: 6,
-    marginTop: 15,
-    color: "#333",
-    fontWeight: "bold",
+    color:'#5b3000',
+    fontFamily:'Quicksand-Regular',
+    fontSize:20,
+    paddingBottom:5,
+    paddingLeft:5,
+    marginTop: 10,
   },
 
   fotoButton: {
@@ -21,8 +22,12 @@ export const styles = StyleSheet.create({
   },
 
   fotoTexto: {
-    color: "#555",
-    fontSize: 14,
+    color:'#5b3000',
+    fontFamily:'Quicksand-Regular',
+    fontSize:20,
+    paddingBottom:5,
+    paddingLeft:5,
+    marginTop: 10,
   },
 
   fotoPreview: {

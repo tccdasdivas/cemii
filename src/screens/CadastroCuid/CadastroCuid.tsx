@@ -20,13 +20,17 @@ import { Input } from "../../components/TextInput/Input";
 import Texto from "../../../assets/dados.png";
 import { Btn } from "../../components/Btn/Btn";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { launchImageLibrary } from "react-native-image-picker";
+import { FotoPicker } from "../../components/FotoPicker/FotoPicker";
+
+
 
 export function CadastroCuid({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
   const [cidades, setCidades] = useState<any[]>([]);
   const [loadingCidades, setLoadingCidades] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [imagem, setImagem] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     nome: "",
@@ -51,7 +55,9 @@ export function CadastroCuid({ navigation }: any) {
 
   const idadeMinima = 18;
   const dataMaximaPermitida = new Date();
-  dataMaximaPermitida.setFullYear(dataMaximaPermitida.getFullYear() - idadeMinima);
+  dataMaximaPermitida.setFullYear(
+    dataMaximaPermitida.getFullYear() - idadeMinima
+  );
 
   const diasSemana = [
     { key: "seg", label: "Segunda" },
@@ -123,85 +129,93 @@ export function CadastroCuid({ navigation }: any) {
   };
 
   // 🔹 Envio do formulário
-  const handleSubmit = async () => {
-    if (
-      !form.nome ||
-      !form.email ||
-      !form.senha ||
-      !form.estado ||
-      !form.cidade
-    ) {
-      Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
+ const handleSubmit = async () => {
+  // Validação básica
+  if (!form.nome || !form.email || !form.senha || !form.estado || !form.cidade) {
+    Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const estadoSelecionado = estados.find((e) => e.id === form.estado);
+    const cidadeSelecionada = cidades.find((c) => c.id === form.cidade);
+
+    if (!estadoSelecionado || !cidadeSelecionada) {
+      Alert.alert("Erro", "Selecione um estado e cidade válidos.");
+      setLoading(false);
       return;
     }
 
+    // Monta FormData para envio
+    const formData = new FormData();
+
+    formData.append("name", form.nome);
+    formData.append("email", form.email);
+    formData.append("password", form.senha);
+    formData.append("telefone", form.telefone.replace(/\D/g, ""));
+    formData.append("cpf", form.cpf.replace(/\D/g, ""));
+    formData.append("nascimento", formatarDataEnvio(form.nascimento));
+
+    // Profissão e COREN
     const profissaoFinal =
       form.profissao === "Outra"
         ? profissaoLivre.trim() || "Outra"
         : form.profissao || "Não informado";
 
-    const inserirCoren =
-      form.profissao === "Enfermeiro(a)"
-        ? profissaoLivre.trim() || "Enfermeiro(a)"
-        : form.profissao || "Não informado";
+    formData.append("profissao", profissaoFinal);
+    formData.append("coren", form.coren);
 
-    setLoading(true);
-    try {
-      const estadoSelecionado = estados.find((e) => e.id === form.estado);
-      const cidadeSelecionada = cidades.find((c) => c.id === form.cidade);
+    // Dias e horários
+    formData.append("diasHorarios", JSON.stringify(diasSelecionados));
 
-      if (!estadoSelecionado || !cidadeSelecionada) {
-        Alert.alert("Erro", "Selecione um estado e cidade válidos.");
-        setLoading(false);
-        return;
-      }
+    // Experiência
+    formData.append("experiencia", form.experiencia);
 
-      const payload = {
-        name: form.nome,
-        email: form.email,
-        password: form.senha,
-        telefone: form.telefone.replace(/\D/g, ""), // remove máscara
-        cpf: form.cpf.replace(/\D/g, ""), // remove máscara
-        foto: "https://placehold.co/100x100",
-        nascimento: formatarDataEnvio(form.nascimento),
-        parentesco: "",
-        profissao: profissaoFinal,
-        cidade: {
-          id: cidadeSelecionada.id,
-          nome: cidadeSelecionada.nome,
-          estado: {
-            id: estadoSelecionado.id,
-            nome: estadoSelecionado.nome,
-            sigla: estadoSelecionado.sigla,
-          },
-        },
-        coren: form.coren,
-        tipo: "CUIDADOR",
-        diasHorarios: JSON.stringify(diasSelecionados),
-        experiencia: form.experiencia,
-      };
+    // Cidade e estado
+    formData.append("cidade[id]", String(cidadeSelecionada.id));
+    formData.append("cidade[nome]", cidadeSelecionada.nome);
+    formData.append("cidade[estado][id]", String(estadoSelecionado.id));
+    formData.append("cidade[estado][nome]", estadoSelecionado.nome);
+    formData.append("cidade[estado][sigla]", estadoSelecionado.sigla);
 
-      console.log("📦 Enviando para /auth/register:", payload);
+    // Tipo de usuário
+    formData.append("tipo", "CUIDADOR");
 
-      const response = await api.post("/auth/register", payload);
-
-      const usuarioCadastrado = response.data;
-
-      // Salvar token e dados do usuário localmente
-      await AsyncStorage.setItem("token", usuarioCadastrado.token);
-      await AsyncStorage.setItem("user", JSON.stringify(usuarioCadastrado));
-      await AsyncStorage.setItem("tipoUsuario", "CUIDADOR");
-
-      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-      navigation.navigate("HomeCuidador");
-    } catch (error: any) {
-      console.error("❌ Erro no cadastro:", error);
-      const msg = error?.response?.data || "Erro ao cadastrar.";
-      Alert.alert("Erro", String(msg));
-    } finally {
-      setLoading(false);
+    // Adiciona foto apenas como arquivo (se houver)
+    if (imagem) {
+      formData.append("foto", {
+        uri: imagem,
+        type: "image/jpeg", // ou "image/png"
+        name: "foto.jpg",
+      } as any);
     }
-  };
+
+    // Envia para o backend
+    const response = await api.post("/auth/register", formData );
+
+    const usuarioCadastrado = response.data;
+
+    // Salva apenas dados leves no AsyncStorage
+    await AsyncStorage.setItem("token", usuarioCadastrado.token);
+    await AsyncStorage.setItem(
+      "user",
+      JSON.stringify({ ...usuarioCadastrado, foto: undefined })
+    );
+    await AsyncStorage.setItem("tipoUsuario", "CUIDADOR");
+
+    Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+    navigation.navigate("HomeCuidador");
+  } catch (error: any) {
+    console.error("❌ Erro no cadastro:", error);
+    const msg = error?.response?.data || "Erro ao cadastrar.";
+    Alert.alert("Erro", String(msg));
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const toggleDiaHorario = (diaKey: string, periodo: string) => {
     const existe = diasSelecionados.some(
@@ -370,12 +384,13 @@ export function CadastroCuid({ navigation }: any) {
               {diasSelecionados.length === 0
                 ? "Selecionar dias e horários"
                 : diasSelecionados
-                  .map(
-                    (item) =>
-                      `${diasSemana.find((d) => d.key === item.dia)?.label
-                      } – ${item.periodo}`
-                  )
-                  .join(", ")}
+                    .map(
+                      (item) =>
+                        `${
+                          diasSemana.find((d) => d.key === item.dia)?.label
+                        } – ${item.periodo}`
+                    )
+                    .join(", ")}
             </Text>
           </TouchableOpacity>
 
@@ -606,6 +621,12 @@ export function CadastroCuid({ navigation }: any) {
               </Picker>
             )}
           </View>
+
+          <FotoPicker
+            imagem={imagem}
+            setImagem={setImagem}
+            label="Foto do Cuidador"
+          />
 
           <Text style={styles.texto2}>Email</Text>
           <Input
