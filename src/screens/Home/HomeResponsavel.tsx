@@ -52,6 +52,7 @@ interface User {
   tipo: string;
   diasHorarios: string;
   experiencia: string;
+  foto: string;
 }
 
 export function calcularIdade(dataNascimento: string | Date): number {
@@ -62,7 +63,7 @@ export function calcularIdade(dataNascimento: string | Date): number {
   const mes = hoje.getMonth() - nascimento.getMonth();
 
   if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-    idade--; 
+    idade--;
   }
 
   return idade;
@@ -72,10 +73,14 @@ export function calcularIdade(dataNascimento: string | Date): number {
 export function HomeResponsavel() {
   const [modalFiltroVisivel, setModalFiltroVisivel] = useState(false);
   const [filtroProfissao, setFiltroProfissao] = useState<string | null>(null);
-  const [filtroExperiencia, setFiltroExperiencia] = useState<boolean | null>(null);
+  const [filtroExperiencia, setFiltroExperiencia] = useState<boolean | null>(
+    null
+  );
   const [users, setUsers] = useState<User[]>([]);
   const [searchText, setSearchText] = useState("");
-  const [tipoUsuarioLogado, setTipoUsuarioLogado] = useState<string | null>(null);
+  const [tipoUsuarioLogado, setTipoUsuarioLogado] = useState<string | null>(
+    null
+  );
 
   const carregarTipoUsuario = async () => {
     const tipo = await AsyncStorage.getItem("tipoUsuario");
@@ -137,7 +142,10 @@ export function HomeResponsavel() {
       const profissaoLower = user.profissao?.toLowerCase() || "";
       const filtroLower = filtroProfissao.toLowerCase();
       if (filtroLower === "outros") {
-        return profissaoLower.includes("cuidador") && profissaoLower.includes("enfermeiro");
+        return (
+          profissaoLower.includes("cuidador") &&
+          profissaoLower.includes("enfermeiro")
+        );
       }
       return profissaoLower.includes(filtroLower);
     })
@@ -149,13 +157,14 @@ export function HomeResponsavel() {
         : !user.experiencia
     );
 
-  
   return (
     <ScrollView style={{ backgroundColor: "#faf8d4" }}>
       <View style={styles.container}>
         <ImageBackground source={Fundo} style={styles.imagem} />
         <View style={styles.icone}>
-          <TouchableOpacity onPress={() => navigation.navigate("PerfilResponsavel")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PerfilResponsavel")}
+          >
             <Ionicons name="person" size={30} style={styles.perfil} />
           </TouchableOpacity>
         </View>
@@ -173,17 +182,23 @@ export function HomeResponsavel() {
           <View style={styles.box}>
             <View style={styles.menu}>
               <View style={styles.mensagem}>
-                <TouchableOpacity onPress={() => navigation.navigate("ChatResponsavel")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("ChatResponsavel")}
+                >
                   <Image source={Menssagem} style={styles.mensagemimg} />
                 </TouchableOpacity>
               </View>
               <View style={styles.coracao}>
-                <TouchableOpacity onPress={() => navigation.navigate("FavoritosResponsavel")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("FavoritosResponsavel")}
+                >
                   <FontAwesome name="heart" size={35} color="#e39694" />
                 </TouchableOpacity>
               </View>
               <View style={styles.oculos}>
-                <TouchableOpacity onPress={() => navigation.navigate("SobreResponsavel")}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("SobreResponsavel")}
+                >
                   <Image source={Oculos} style={styles.oculosimg} />
                 </TouchableOpacity>
               </View>
@@ -211,9 +226,10 @@ export function HomeResponsavel() {
             </View>
 
             {usuariosFiltradosPorPesquisa.map((user, index) => {
-              const backgroundColor = index % 2 === 0
-                ? "rgba(142, 196, 110, 0.4)"
-                : "rgba(127, 169, 199, 0.4)";
+              const backgroundColor =
+                index % 2 === 0
+                  ? "rgba(142, 196, 110, 0.4)"
+                  : "rgba(127, 169, 199, 0.4)";
 
               // Parse diasHorarios de forma segura
               let diasHorariosArray: { dia: string; periodo: string }[] = [];
@@ -239,7 +255,8 @@ export function HomeResponsavel() {
               const disponibilidadePorDia: Record<string, string[]> = {};
               diasHorariosArray.forEach(({ dia, periodo }) => {
                 const nomeDia = diasMap[dia] || dia;
-                if (!disponibilidadePorDia[nomeDia]) disponibilidadePorDia[nomeDia] = [];
+                if (!disponibilidadePorDia[nomeDia])
+                  disponibilidadePorDia[nomeDia] = [];
                 disponibilidadePorDia[nomeDia].push(periodo);
               });
 
@@ -248,28 +265,47 @@ export function HomeResponsavel() {
                 .join(", ");
 
               return (
-                <View style={[styles.contperfil1, { backgroundColor }]} key={user.id}>
+                <View
+                  style={[styles.contperfil1, { backgroundColor }]}
+                  key={user.id}
+                >
                   <View style={styles.boxperfil1}>
                     <View style={{ flexDirection: "row" }}>
                       <TouchableOpacity
-                        onPress={() => navigation.navigate("Informacao", { userId: user.id })}
+                        onPress={() =>
+                          navigation.navigate("Informacao", { userId: user.id })
+                        }
                         style={{ width: "17%" }}
                       >
                         <Ionicons
                           name="person"
                           size={40}
-                          style={[styles.perfil1, { borderColor: index % 2 === 0 ? "#7fa9c7" : "#8ec46e" }]}
+                          style={[
+                            styles.perfil1,
+                            {
+                              borderColor:
+                                index % 2 === 0 ? "#7fa9c7" : "#8ec46e",
+                            },
+                          ]}
                         />
                       </TouchableOpacity>
 
                       <View style={{ marginLeft: 5 }}>
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
                           <Text style={styles.texto1}>{user.nome} |</Text>
-                          <Text style={styles.texto1}> {calcularIdade(user.nascimento)} anos</Text>
+                          <Text style={styles.texto1}>
+                            {" "}
+                            {calcularIdade(user.nascimento)} anos
+                          </Text>
                         </View>
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
                           <Text style={styles.texto3}>
-                            Localização: {user.cidade?.nome} - {user.cidade?.estado?.sigla}
+                            Localização: {user.cidade?.nome} -{" "}
+                            {user.cidade?.estado?.sigla}
                           </Text>
                         </View>
                       </View>
@@ -280,7 +316,9 @@ export function HomeResponsavel() {
                         Disponibilidade: {diasHorariosTexto || "Não informado"}
                       </Text>
                       <Text style={styles.texto3}>{user.profissao}</Text>
-                      <Text style={styles.texto3}>{user.experiencia || "Sem experiência na área"}</Text>
+                      <Text style={styles.texto3}>
+                        {user.experiencia || "Sem experiência na área"}
+                      </Text>
                     </View>
                   </View>
                 </View>

@@ -19,12 +19,15 @@ import Texto from "../../../assets/dados.png";
 import { Btn } from "../../components/Btn/Btn";
 import { MaskedTextInput } from "react-native-mask-text";
 import { Botao } from "../../components/Botao/Botao";
+import { FotoPicker } from "../../components/FotoPicker/FotoPicker";
 
 export function CadastroFam({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
   const [cidades, setCidades] = useState<any[]>([]);
   const [loadingCidades, setLoadingCidades] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [imagem, setImagem] = useState<String | null>(null);
 
   const [form, setForm] = useState({
     nome: "",
@@ -127,7 +130,7 @@ export function CadastroFam({ navigation }: any) {
         password: form.senha,
         telefone: form.telefone.replace(/\D/g, ""), // remove máscara
         cpf: form.cpf.replace(/\D/g, ""), // remove máscara
-        foto: "https://placehold.co/100x100",
+        foto: imagem,
         nascimento: formatarDataEnvio(form.nascimento),
         parentesco: form.parentesco,
         cidade: {
@@ -312,6 +315,12 @@ export function CadastroFam({ navigation }: any) {
               </Picker>
             )}
           </View>
+
+          <FotoPicker
+                      imagem={imagem}
+                      setImagem={setImagem}
+                      label="Foto do Responsavel"
+                    />
 
           <Text style={styles.texto2}>Email</Text>
           <Input

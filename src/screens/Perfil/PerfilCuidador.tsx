@@ -38,6 +38,7 @@ export function PerfilCuidador() {
   const [profissao, setProfissao] = useState("");
   const [cidadeId, setCidadeId] = useState<number | null>(null);
   const [estadoId, setEstadoId] = useState<number | null>(null);
+  const [foto, setFoto] = useState("");
 
   const [cidades, setCidades] = useState<any[]>([]);
   const [estados, setEstados] = useState<any[]>([]);
@@ -97,6 +98,7 @@ export function PerfilCuidador() {
       setProfissao(u.profissao);
       setCidadeId(u.cidade?.id);
       setEstadoId(u.cidade?.estado?.id);
+      setFoto(u.foto);
 
       if (u.cidade?.estado?.id) {
         carregarCidades(u.cidade.estado.id);
@@ -145,7 +147,8 @@ export function PerfilCuidador() {
         profissao,
         nascimento: user.nascimento,
         tipo: user.tipo,
-        cidade: { id: cidadeId }
+        cidade: { id: cidadeId },
+        foto,
       };
 
       const response = await api.put(`/usuarios/${user.id}`, body, {
@@ -179,10 +182,7 @@ export function PerfilCuidador() {
       <TouchableOpacity
         onPress={async () => {
           const tipo = await AsyncStorage.getItem("tipoUsuario");
-          if (tipo === "CUIDADOR") navigation.navigate("HomeCuidador");
-          else if (tipo === "RESPONSAVEL")
-            navigation.navigate("HomeResponsavel");
-          else navigation.navigate("Inicial");
+          navigation.navigate("HomeCuidador");
         }}
         style={styles.icone}
       >
@@ -190,7 +190,10 @@ export function PerfilCuidador() {
       </TouchableOpacity>
 
       <View style={styles.container}>
-        <Image source={Bidu} style={styles.imgbidu} />
+        <Image
+          source={{ uri: `data:image/jpeg;base64,${user?.foto}` }}
+          style={styles.imgbidu}
+        />
         <TouchableOpacity
           style={styles.pencil}
           onPress={() => setEditando(!editando)}

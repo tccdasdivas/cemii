@@ -21,12 +21,15 @@ import { Btn } from "../../components/Btn/Btn";
 import { api } from "../../services/api";
 import { MaskedTextInput } from "react-native-mask-text";
 import { Picker } from "@react-native-picker/picker";
+import { FotoPicker } from "../../components/FotoPicker/FotoPicker";
 
 export function CadastroIdoso({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
   const [cidades, setCidades] = useState<any[]>([]);
   const [loadingCidades, setLoadingCidades] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [imagem, setImagem] = useState<String | null>(null);
 
   const [form, setForm] = useState({
     nome: "",
@@ -141,7 +144,7 @@ export function CadastroIdoso({ navigation }: any) {
       const payload = {
         nome: form.nome,
         cpf: form.cpf.replace(/\D/g, ""), // remove máscara
-        foto: "https://placehold.co/100x100",
+        foto: imagem,
         nascimento: formatarDataEnvio(form.nascimento),
         cidade: {
           id: cidadeSelecionada.id,
@@ -302,6 +305,11 @@ export function CadastroIdoso({ navigation }: any) {
             placeholder="Ex: Acamado"
           />
         </View>
+        <FotoPicker
+                    imagem={imagem}
+                    setImagem={setImagem}
+                    label="Foto do Profissional"
+                  />
         <View style={styles.botao}>
           {loading ? (
             <ActivityIndicator size="large" color="#333" />
