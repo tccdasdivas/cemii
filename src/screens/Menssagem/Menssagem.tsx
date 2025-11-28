@@ -90,6 +90,8 @@ useEffect(() => {
   loadUser();
 }, []);
 
+
+
   return (
     <View style={{ flex: 1, backgroundColor: '#faf8d4' }}>
       <ScrollView style={{ flex: 1 }}>
