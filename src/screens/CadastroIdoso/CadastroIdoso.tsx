@@ -159,8 +159,8 @@ export function CadastroIdoso({ navigation }: any) {
         numero: form.numero,
         logradouro: form.logradouro,
         responsavel: {
-          id: usuarioLogado.id
-        }
+          id: usuarioLogado.id}
+        
       };
 
       console.log("📦 Enviando para /idosos", payload);
@@ -308,7 +308,7 @@ export function CadastroIdoso({ navigation }: any) {
         <FotoPicker
                     imagem={imagem}
                     setImagem={setImagem}
-                    label="Foto do Profissional"
+                    label="Foto do Idoso"
                   />
         <View style={styles.botao}>
           {loading ? (

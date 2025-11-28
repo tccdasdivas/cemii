@@ -186,7 +186,10 @@ export function PerfilResponsavel() {
       </TouchableOpacity>
 
       <View style={styles.container}>
-        <Image source={Bidu} style={styles.imgbidu} />
+        <Image
+                  source={{ uri: `data:image/jpeg;base64,${user?.foto}` }}
+                  style={styles.imgbidu}
+                />
         <TouchableOpacity
           style={styles.pencil}
           onPress={() => setEditando(!editando)}
