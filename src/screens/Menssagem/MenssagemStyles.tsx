@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     flexDirection:'row',
     width:'100%',
     alignItems:'center',
-    paddingTop:40,
+    paddingTop:30,
     paddingBottom:20,
   },
   texto1:{ 
@@ -33,8 +33,8 @@ export const styles = StyleSheet.create({
     color:'#c89a65'
   },
   img:{
-    width:60,
-    height:60,
+    width:70,
+    height:70,
     borderRadius:40,
     borderColor:'#7d5220',
     borderWidth:2.5,
