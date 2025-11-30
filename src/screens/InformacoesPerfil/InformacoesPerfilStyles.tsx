@@ -26,6 +26,14 @@ export const styles = StyleSheet.create({
     marginLeft:10,
     marginTop:10,
   },
+  texto1:{
+    color:'#725431',
+    fontFamily:'Quicksand-Regular',
+    fontSize:22,
+    marginLeft:10,
+    marginTop:10,
+   
+  },
   icone:{
     marginTop:50, 
     width:'12%', 

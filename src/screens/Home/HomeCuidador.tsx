@@ -19,6 +19,7 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 import Oculos from "../../../assets/oculos.png";
 import Menssagem from "../../../assets/mensagem.png";
+import Usuario from "../../../assets/usuario.png";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
@@ -27,6 +28,10 @@ import { useFonts } from "expo-font";
 import { api } from "../../services/api";
 
 import { ModalFiltro } from "../../components/FiltroCuidador/ModalFiltro";
+import { getFavoritos, toggleFavorito } from "../../utils/favoritos";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { formatarTelefone } from "../../utils/telefoneMask";
+import { calcularIdade } from "../../utils/calcularIdade";
 
 interface Estado {
   id: number;
@@ -40,6 +45,12 @@ interface Cidade {
   estado: Estado;
 }
 
+interface Responsavel {
+  id: number;
+  nome: string;
+  telefone: string;
+}
+
 interface User {
   id: number;
   nome: string;
@@ -47,26 +58,15 @@ interface User {
   nascimento: Date;
   cidade: Cidade;
   necessidade: string | null;
+  responsavel?: Responsavel;
+  foto: string;
 }
 
-export function calcularIdade(dataNascimento: string | Date): number {
-  const nascimento = new Date(dataNascimento);
-  const hoje = new Date();
-
-  let idade = hoje.getFullYear() - nascimento.getFullYear();
-  const mes = hoje.getMonth() - nascimento.getMonth();
-
-  if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-    idade--;
-  }
-
-  return idade;
-}
-
-//Aqui é a tela dos perfis dos responsaveis
 export function HomeCuidador() {
   const [modalFiltroVisivel, setModalFiltroVisivel] = useState(false);
-  const [filtroNecessidade, setFiltroNecessidade] = useState<"sim" | "nao" | null>(null);
+  const [filtroNecessidade, setFiltroNecessidade] = useState<
+    "sim" | "nao" | null
+  >(null);
 
   const [users, setUsers] = useState<User[]>([]);
   const [searchText, setSearchText] = useState("");
@@ -84,9 +84,17 @@ export function HomeCuidador() {
       });
   };
 
+  const [favoritos, setFavoritos] = useState<number[]>([]);
+
+  async function handleFavorito(id: number) {
+      const updated = await toggleFavorito("@favoritos_cuidadores", id);
+      setFavoritos(updated);
+    }
+
   useFocusEffect(
     useCallback(() => {
       getUsers();
+      getFavoritos("@favoritos_cuidadores").then(setFavoritos);
     }, [])
   );
 
@@ -99,29 +107,31 @@ export function HomeCuidador() {
   if (!fontsLoaded) return null;
 
   const usuariosFiltradosPorPesquisa = users
-  .filter((user) =>
-    user.nome.toLowerCase().includes(searchText.toLowerCase())
-  )
-  .filter((user) => {
-    if (filtroNecessidade === null) return true;
+    .filter((user) =>
+      user.nome.toLowerCase().includes(searchText.toLowerCase())
+    )
+    .filter((user) => {
+      if (filtroNecessidade === null) return true;
 
-    if (filtroNecessidade === "sim") {
-      return user.necessidade !== null && user.necessidade !== "";
-    }
+      if (filtroNecessidade === "sim") {
+        return user.necessidade !== null && user.necessidade !== "";
+      }
 
-    if (filtroNecessidade === "nao") {
-      return user.necessidade === null || user.necessidade === "";
-    }
+      if (filtroNecessidade === "nao") {
+        return user.necessidade === null || user.necessidade === "";
+      }
 
-    return true;
-  });
+      return true;
+    });
 
   return (
     <ScrollView style={{ backgroundColor: "#faf8d4" }}>
       <View style={styles.container}>
         <ImageBackground source={Fundo} style={styles.imagem} />
         <View style={styles.icone}>
-          <TouchableOpacity onPress={() => navigation.navigate("PerfilCuidador")}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("PerfilCuidador")}
+          >
             <Ionicons name="person" size={30} style={styles.perfil} />
           </TouchableOpacity>
         </View>
@@ -190,48 +200,120 @@ export function HomeCuidador() {
                   key={user.id}
                 >
                   <View style={styles.boxperfil1}>
-                    <View style={{ flexDirection: "row" }}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "flex-start" }}
+                    >
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate("Informacao", { userId: user.id })
+                          navigation.navigate("InformacaoCuidador", { user })
                         }
-                        style={{ width: "17%" }}
+                        style={{ marginRight: 5 }}
                       >
-                        <Ionicons
-                          name="person"
-                          size={40}
-                          style={[
-                            styles.perfil1,
-                            {
+                        {user.foto ? (
+                          <Image
+                            source={
+                              user?.foto
+                                ? { uri: `data:image/jpeg;base64,${user.foto}` }
+                                : Usuario
+                            }
+                            style={[
+                              styles.perfil1,
+                              {
+                                borderColor:
+                                  index % 2 === 0 ? "#7fa9c7" : "#8ec46e",
+                              },
+                            ]}
+                          />
+                        ) : (
+                          <Ionicons
+                            name="person"
+                            size={45}
+                            color="#c89a65"
+                            style={{
+                              marginRight: 10,
                               borderColor:
                                 index % 2 === 0 ? "#7fa9c7" : "#8ec46e",
-                            },
-                          ]}
-                        />
+                              borderWidth: 1,
+                              borderRadius: 15,
+                              padding: 5,
+                            }}
+                          />
+                        )}
                       </TouchableOpacity>
                       <View style={{ marginLeft: 5 }}>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <Text style={styles.texto1}>{user.nome} |</Text>
-                          <Text style={styles.texto1}>
-                            {" "}
-                            {calcularIdade(user.nascimento)} anos
+                        <View style={{ flex: 1, marginLeft: 10 }}>
+                          <Text style={[styles.texto1, { flexWrap: "wrap" }]}>
+                            {user.nome} | {calcularIdade(user.nascimento)} anos
                           </Text>
-                        </View>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <Text style={styles.texto3}>
+
+                          <Text style={[styles.texto3, { flexWrap: "wrap" }]}>
                             Localização: {user.cidade?.nome} -{" "}
-                            {user.cidade?.estado?.sigla}{" "}
+                            {user.cidade?.estado?.sigla}
                           </Text>
                         </View>
                       </View>
                     </View>
                     <View>
-                      <Text style={styles.texto3}>Idoso</Text>
+                      <Text style={styles.texto3}>
+                        Nome do responsável:{" "}
+                        {user.responsavel?.nome || "Não informado"}
+                      </Text>
                       <Text style={styles.texto3}>{user.necessidade}</Text>
+                      <Text style={styles.texto3}>Telefone do Responsavel: {formatarTelefone( user.responsavel.telefone)}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <TouchableOpacity
+                        onPress={async () => {
+                          try {
+                            const idLogado = await AsyncStorage.getItem(
+                              "idUsuario"
+                            );
+                            if (!idLogado) {
+                              Alert.alert(
+                                "Erro",
+                                "Não foi possível identificar o usuário logado."
+                              );
+                              return;
+                            }
+
+                            navigation.navigate("Menssagem", {
+                              userId: user.id,
+                              usuarioLogadoId: Number(idLogado),
+                              conversaId: user.conversaId || null,
+                            });
+                          } catch (error) {
+                            console.log("Erro ao abrir chat:", error);
+                            Alert.alert(
+                              "Erro",
+                              "Não foi possível abrir o chat."
+                            );
+                          }
+                        }}
+                        style={[
+                          styles.botao,
+                          {
+                            backgroundColor:
+                              index % 2 === 0
+                                ? "rgba(142, 196, 110, 0.4)"
+                                : "rgba(127, 169, 199, 0.4)",
+                            borderColor:
+                              index % 2 === 0 ? "#8ec46e" : "#7fa9c7",
+                          },
+                        ]}
+                      >
+                        <Text style={styles.texto}>Mandar mensagem</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity onPress={() => handleFavorito(user.id)}>
+                        <FontAwesome
+                          name={
+                            favoritos.includes(user.id) ? "heart" : "heart-o"
+                          }
+                          size={25}
+                          color={index % 2 === 0 ? "#8ec46e" : "#7fa9c7"}
+                          style={{ marginTop: 18, marginLeft: 15 }}
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>

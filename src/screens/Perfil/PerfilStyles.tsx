@@ -59,14 +59,14 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   texto: {
-    color: "#725431",
+    color: "#5b3000",
     fontFamily: "Quicksand-Bold",
     fontSize: 25,
     marginLeft: 10,
     marginTop: 10,
   },
   texto1: {
-    color: "#725431",
+    color: "#5b3000",
     fontFamily: "Quicksand-Regular",
     fontSize: 25,
     marginLeft: 10,

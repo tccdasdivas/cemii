@@ -40,6 +40,7 @@ export function CadastroIdoso({ navigation }: any) {
     numero: "",
     logradouro: "",
     nascimento: new Date(),
+    bairro: "",
   });
 
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -158,6 +159,7 @@ export function CadastroIdoso({ navigation }: any) {
         necessidade: form.necessidade,
         numero: form.numero,
         logradouro: form.logradouro,
+        bairro: form.bairro,
         responsavel: {
           id: usuarioLogado.id}
         
@@ -296,6 +298,12 @@ export function CadastroIdoso({ navigation }: any) {
           <Input
             value={form.numero}
             onChangeText={(v) => handleChange("numero", v)}
+          />
+
+          <Text style={styles.texto2}>Bairro</Text>
+          <Input
+            value={form.bairro}
+            onChangeText={(v) => handleChange("bairro", v)}
           />
 
           <Text style={styles.texto2}>Necessidade Especial</Text>

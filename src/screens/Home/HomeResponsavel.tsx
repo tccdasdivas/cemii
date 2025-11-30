@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
-  Modal,
 } from "react-native";
 import Fundo from "../../../assets/fundoHome.png";
 import { styles } from "./HomeStyles";
@@ -20,15 +19,16 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 import Oculos from "../../../assets/oculos.png";
 import Menssagem from "../../../assets/mensagem.png";
+import Usuario from "../../../assets/usuario.png";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-
-import { useFonts } from "expo-font";
+import * as Font from "expo-font";
 
 import { api } from "../../services/api";
-
+import { getFavoritos, toggleFavorito } from "../../utils/favoritos";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ModalFiltro } from "../../components/FiltroResponsavel/ModalFiltro";
+import { calcularIdade } from "../../utils/calcularIdade";
 
 interface Estado {
   id: number;
@@ -55,21 +55,6 @@ interface User {
   foto: string;
 }
 
-export function calcularIdade(dataNascimento: string | Date): number {
-  const nascimento = new Date(dataNascimento);
-  const hoje = new Date();
-
-  let idade = hoje.getFullYear() - nascimento.getFullYear();
-  const mes = hoje.getMonth() - nascimento.getMonth();
-
-  if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-    idade--;
-  }
-
-  return idade;
-}
-
-//Aqui é a tela dos perfis dos cuidadores
 export function HomeResponsavel() {
   const [modalFiltroVisivel, setModalFiltroVisivel] = useState(false);
   const [filtroProfissao, setFiltroProfissao] = useState<string | null>(null);
@@ -81,6 +66,21 @@ export function HomeResponsavel() {
   const [tipoUsuarioLogado, setTipoUsuarioLogado] = useState<string | null>(
     null
   );
+  const [favoritos, setFavoritos] = useState<number[]>([]);
+
+  const navigation = useNavigation();
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        "Brixton-Regular": require("../../../assets/fonts/Brixton/Brixton-Regular.otf"),
+      });
+      setFontsLoaded(true);
+    }
+    loadFonts();
+  }, []);
 
   const carregarTipoUsuario = async () => {
     const tipo = await AsyncStorage.getItem("tipoUsuario");
@@ -90,8 +90,6 @@ export function HomeResponsavel() {
   const getUsers = async () => {
     try {
       const response = await api.get("/usuarios");
-
-      // Garante que users sempre será um array
       let usersArray: User[] = [];
       if (Array.isArray(response.data)) {
         usersArray = response.data;
@@ -100,33 +98,32 @@ export function HomeResponsavel() {
       } else {
         console.warn("Resposta inesperada da API:", response.data);
       }
-
       setUsers(usersArray);
     } catch (err: any) {
       Alert.alert("Ops", err.response?.data?.erros ?? "Tente novamente!");
-      setUsers([]); // previne filtro em undefined
+      setUsers([]);
     }
   };
+
+   async function handleFavorito(id: number) {
+    const updated = await toggleFavorito("@favoritos_cuidadores", id);
+    setFavoritos(updated);
+  }
 
   useFocusEffect(
     useCallback(() => {
       carregarTipoUsuario();
       getUsers();
+      getFavoritos("@favoritos_cuidadores").then(setFavoritos);
     }, [])
   );
 
-  const navigation = useNavigation();
-  const [fontsLoaded] = useFonts({
-    "Brixton-Regular": require("../../../assets/fonts/Brixton/Brixton-Regular.otf"),
-  });
-
-  if (!fontsLoaded) return null;
+ 
 
   const usuariosFiltrados: User[] = Array.isArray(users)
     ? users.filter((user) => {
         const tipoLogado = tipoUsuarioLogado?.toLowerCase();
         const tipoUser = user.tipo?.toLowerCase() ?? "";
-
         if (tipoLogado === "cuidador") return tipoUser === "responsavel";
         if (tipoLogado === "responsavel") return tipoUser === "cuidador";
         return false;
@@ -231,7 +228,6 @@ export function HomeResponsavel() {
                   ? "rgba(142, 196, 110, 0.4)"
                   : "rgba(127, 169, 199, 0.4)";
 
-              // Parse diasHorarios de forma segura
               let diasHorariosArray: { dia: string; periodo: string }[] = [];
               if (user.diasHorarios) {
                 try {
@@ -270,44 +266,56 @@ export function HomeResponsavel() {
                   key={user.id}
                 >
                   <View style={styles.boxperfil1}>
-                    <View style={{ flexDirection: "row" }}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "flex-start" }}
+                    >
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate("Informacao", { userId: user.id })
+                          navigation.navigate("InformacaoResponsavel", { user })
                         }
-                        style={{ width: "17%" }}
+                        style={{ marginRight: 5 }}
                       >
-                        <Ionicons
-                          name="person"
-                          size={40}
-                          style={[
-                            styles.perfil1,
-                            {
+                        {user.foto ? (
+                          <Image
+                            source={
+                              user?.foto
+                                ? { uri: `data:image/jpeg;base64,${user.foto}` }
+                                : Usuario
+                            }
+                            style={[
+                              styles.perfil1,
+                              {
+                                borderColor:
+                                  index % 2 === 0 ? "#7fa9c7" : "#8ec46e",
+                              },
+                            ]}
+                          />
+                        ) : (
+                          <Ionicons
+                            name="person"
+                            size={45}
+                            color="#c89a65"
+                            style={{
+                              marginRight: 10,
                               borderColor:
                                 index % 2 === 0 ? "#7fa9c7" : "#8ec46e",
-                            },
-                          ]}
-                        />
+                              borderWidth: 1,
+                              borderRadius: 15,
+                              padding: 5,
+                            }}
+                          />
+                        )}
                       </TouchableOpacity>
 
-                      <View style={{ marginLeft: 5 }}>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <Text style={styles.texto1}>{user.nome} |</Text>
-                          <Text style={styles.texto1}>
-                            {" "}
-                            {calcularIdade(user.nascimento)} anos
-                          </Text>
-                        </View>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <Text style={styles.texto3}>
-                            Localização: {user.cidade?.nome} -{" "}
-                            {user.cidade?.estado?.sigla}
-                          </Text>
-                        </View>
+                      <View style={{ flex: 1, marginLeft: 10 }}>
+                        <Text style={[styles.texto1, { flexWrap: "wrap" }]}>
+                          {user.nome} | {calcularIdade(user.nascimento)} anos
+                        </Text>
+
+                        <Text style={[styles.texto3, { flexWrap: "wrap" }]}>
+                          Localização: {user.cidade?.nome} -{" "}
+                          {user.cidade?.estado?.sigla}
+                        </Text>
                       </View>
                     </View>
 
@@ -319,6 +327,60 @@ export function HomeResponsavel() {
                       <Text style={styles.texto3}>
                         {user.experiencia || "Sem experiência na área"}
                       </Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <TouchableOpacity
+                        onPress={async () => {
+                          try {
+                            const idLogado = await AsyncStorage.getItem(
+                              "idUsuario"
+                            );
+                            if (!idLogado) {
+                              Alert.alert(
+                                "Erro",
+                                "Não foi possível identificar o usuário logado."
+                              );
+                              return;
+                            }
+
+                            navigation.navigate("Menssagem", {
+                              userId: user.id,
+                              usuarioLogadoId: Number(idLogado),
+                              conversaId: user.conversaId || null,
+                            });
+                          } catch (error) {
+                            console.log("Erro ao abrir chat:", error);
+                            Alert.alert(
+                              "Erro",
+                              "Não foi possível abrir o chat."
+                            );
+                          }
+                        }}
+                        style={[
+                          styles.botao,
+                          {
+                            backgroundColor:
+                              index % 2 === 0
+                                ? "rgba(142, 196, 110, 0.4)"
+                                : "rgba(127, 169, 199, 0.4)",
+                            borderColor:
+                              index % 2 === 0 ? "#8ec46e" : "#7fa9c7",
+                          },
+                        ]}
+                      >
+                        <Text style={styles.texto}>Mandar mensagem</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity onPress={() => handleFavorito(user.id)}>
+                        <FontAwesome
+                          name={
+                            favoritos.includes(user.id) ? "heart" : "heart-o"
+                          }
+                          size={25}
+                          color={index % 2 === 0 ? "#8ec46e" : "#7fa9c7"}
+                          style={{ marginTop: 18, marginLeft: 15 }}
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>

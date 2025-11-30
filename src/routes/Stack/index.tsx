@@ -12,10 +12,11 @@ import { SobreCuidador } from "../../screens/Sobre/SobreCuidador";
 import { FavoritosCuidador } from "../../screens/Favoritos/FavotitosCuidador";
 import { Menssagem } from "../../screens/Menssagem/Menssagem";
 import { PerfilCuidador } from "../../screens/Perfil/PerfilCuidador";
-import { InformacoesPerfil } from "../../screens/InformacoesPerfil/InformacoesPerfil";
+import { InformacoesPerfilResponsavel } from "../../screens/InformacoesPerfil/InformacoesPerfilResponsavel";
+import { InformacoesPerfilCuidador } from "../../screens/InformacoesPerfil/InformacoesPerfilCuidador";
 import { SobreResponsavel } from "../../screens/Sobre/SobreResponsavel";
 import { FavoritosResponsavel } from "../../screens/Favoritos/FavotitosResponsavel";
-import { ChatCuidadador } from "../../screens/Chat/ChatCuidador";
+import { ChatCuidador } from "../../screens/Chat/ChatCuidador";
 import { ChatResponsavel } from "../../screens/Chat/ChatResponsavel";
 import { HomeCuidador } from "../../screens/Home/HomeCuidador";
 import { PerfilResponsavel } from "../../screens/Perfil/PerfilResponsavel";
@@ -38,12 +39,13 @@ export default function(){
             <Screen name="SobreCuidador" component={SobreCuidador}/>
             <Screen name="FavoritosCuidador" component={FavoritosCuidador}/>
             <Screen name="FavoritosResponsavel" component={FavoritosResponsavel}/>
-            <Screen name="ChatCuidador" component={ChatCuidadador}/>
+            <Screen name="ChatCuidador" component={ChatCuidador}/>
             <Screen name="ChatResponsavel" component={ChatResponsavel}/>
             <Screen name="Menssagem" component={Menssagem}/>
             <Screen name="PerfilCuidador" component={PerfilCuidador}/>
              <Screen name="PerfilResponsavel" component={PerfilResponsavel}/>
-            <Screen name="Informacao" component={InformacoesPerfil}/>
+            <Screen name="InformacaoCuidador" component={InformacoesPerfilCuidador}/>
+            <Screen name="InformacaoResponsavel" component={InformacoesPerfilResponsavel}/>
             
         </Navigator>
     )

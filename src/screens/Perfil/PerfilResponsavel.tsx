@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { styles } from "./PerfilStyles";
 import Fundo from "../../../assets/fundoHome.png";
-import Bidu from "../../../assets/Bidu.png";
+import Usuario from "../../../assets/usuario.png";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -25,6 +25,9 @@ import Entypo from "@expo/vector-icons/Entypo";
 
 import { api } from "../../services/api";
 import { MaskedTextInput } from "react-native-mask-text";
+import { Ionicons } from "@expo/vector-icons";
+import { formatarTelefone } from "../../utils/telefoneMask";
+import { formatarCPF } from "../../utils/cpfMask";
 
 export function PerfilResponsavel() {
   const [user, setUser] = useState<any>(null);
@@ -44,18 +47,6 @@ export function PerfilResponsavel() {
   const [salvando, setSalvando] = useState(false);
   const navigation = useNavigation();
 
-  // Funções para formatar CPF e telefone
-  const formatarCPF = (cpf: string) => {
-    if (!cpf) return "";
-    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
-  };
-
-  const formatarTelefone = (tel: string) => {
-    if (!tel) return "";
-    return tel.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
-  };
-
-  // Carregar estados e cidades
   const carregarEstados = async () => {
     try {
       const response = await api.get("/estados");
@@ -87,8 +78,6 @@ export function PerfilResponsavel() {
 
       const u = response.data;
       setUser(u);
-
-      // Preenche inputs
       setNome(u.nome);
       setEmail(u.email);
       setTelefone(u.telefone);
@@ -142,7 +131,7 @@ export function PerfilResponsavel() {
         cpf,
         nascimento: user.nascimento,
         tipo: user.tipo,
-        cidade: { id: cidadeId }
+        cidade: { id: cidadeId },
       };
 
       const response = await api.put(`/usuarios/${user.id}`, body, {
@@ -186,10 +175,37 @@ export function PerfilResponsavel() {
       </TouchableOpacity>
 
       <View style={styles.container}>
-        <Image
-                  source={{ uri: `data:image/jpeg;base64,${user?.foto}` }}
-                  style={styles.imgbidu}
-                />
+        {user?.foto ? (
+          <Image
+            source={
+              user?.foto
+                ? { uri: `data:image/jpeg;base64,${user.foto}` }
+                : Usuario
+            }
+            style={[
+              styles.imgbidu,
+              {
+                
+              },
+            ]}
+          />
+        ) : (
+          <Ionicons
+            name="person"
+            size={125}
+            color="#c89a65"
+            style={{
+              marginRight: 10,
+              borderColor: "#c89a65",
+              borderWidth: 2,
+              borderRadius: 200,
+              padding: 25,
+              backgroundColor: '#faf8d4', 
+              position: "absolute",
+               marginTop: 30,
+            }}
+          />
+        )}
         <TouchableOpacity
           style={styles.pencil}
           onPress={() => setEditando(!editando)}
@@ -241,7 +257,7 @@ export function PerfilResponsavel() {
                   style={styles.inputEdit}
                 />
               ) : (
-                <Text style={styles.texto2}>Telefone: {user?.telefone}</Text>
+                <Text style={styles.texto2}>Telefone: {formatarTelefone(user?.telefone)}</Text>
               )}
 
               {/* CPF */}
@@ -255,7 +271,7 @@ export function PerfilResponsavel() {
                   style={styles.inputEdit}
                 />
               ) : (
-                <Text style={styles.texto2}>CPF: {user?.cpf}</Text>
+                <Text style={styles.texto2}>CPF: {formatarCPF(user?.cpf)}</Text>
               )}
             </View>
           </View>

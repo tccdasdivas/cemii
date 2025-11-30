@@ -43,6 +43,23 @@ export const styles = StyleSheet.create({
 
   box2:{
     width:'98%',
-    marginLeft:5
+    marginLeft:5,
+    marginTop:10
+  },
+  texto1: {
+    color: "#5b3000",
+    fontFamily: "Brixton-Regular",
+    fontSize: 25,
+  },
+  texto2: {
+    color: "#5b3000",
+    fontFamily: "Brixton-Regular",
+    fontSize: 19,
+  },
+  texto3: {
+    color: "#7d5220",
+    fontFamily: "Brixton-Regular",
+    fontSize: 19,
+    flexWrap: "wrap",
   },
 });
