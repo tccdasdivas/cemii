@@ -17,15 +17,13 @@ export function Menssagem() {
 
   const navigation = useNavigation();
   const route = useRoute();
-  
+
   const { userId, usuarioLogadoId } = route.params || {};
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [user, setUser] = useState(null);
 
-  const [mensagens, setMensagens] = useState([
-    { id: 1, texto: 'Olá! Como posso ajudar?', lado: 'esquerda' }
-  ]);
+  const [mensagens, setMensagens] = useState([]);
 
   const [texto, setTexto] = useState("");
 
@@ -41,6 +39,33 @@ export function Menssagem() {
     "Vixe Maria!",
     "Kkkkkk tu é engraçado demais!"
   ];
+
+  async function carregarMensagens() {
+    if (!usuarioLogadoId || !userId) return;
+
+    try {
+        const response = await api.get(`/mensagens/usuario/${usuarioLogadoId}`);  
+        const todasMensagensDoUsuario = response.data;
+        const mensagensDesteChat = todasMensagensDoUsuario.filter(msg => 
+           
+            (msg.usuarioMandou.id === userId || msg.usuarioRecebeu.id === userId)
+        );
+      
+        const historicoFormatado = mensagensDesteChat
+            .sort((a, b) => a.id - b.id) 
+            .map(msg => ({
+                id: msg.id,
+                texto: msg.mensagem,
+                lado: msg.usuarioMandou.id === usuarioLogadoId ? 'direita' : 'esquerda',
+            }));
+
+        setMensagens(historicoFormatado);
+
+    } catch (e) {
+        console.log("Erro ao carregar mensagens:", e);
+        setMensagens([]);
+    }
+}
 
   useEffect(() => {
     async function loadFonts() {
@@ -62,52 +87,53 @@ export function Menssagem() {
         console.log("Erro ao carregar usuário:", e);
       }
     }
-
     if (userId) loadUser();
-  }, [userId]);
 
-  async function enviarMensagem() {
-  if (texto.trim() === "") return;
+    if (userId && usuarioLogadoId) {
+      carregarMensagens();
+    }
+  }, [userId, usuarioLogadoId]);
 
-  const novaMensagem = {
-    id: Date.now(),
-    texto: texto,
-    lado: "direita"
-  };
-
-  setMensagens([...mensagens, novaMensagem]);
-  setTexto("");
-
-  try {
-    await api.post("/mensagens", {
-      mensagem: texto,
-      usuarioMandou: {id: usuarioLogadoId}, 
-      usuarioRecebeu: {id: userId}       
-    });
-    console.log("Mensagem salva no banco!");
-  } catch (error) {
-    console.log("Erro ao salvar mensagem no banco:", error);
-  }
-
-  responderAutomaticamente();
-}
-
-  function responderAutomaticamente() {
+  async function responderAutomaticamente() {
     const delay = Math.floor(Math.random() * 1500) + 800;
-
-    setTimeout(() => {
+    setTimeout(async () => {
       const resposta = respostasManoel[Math.floor(Math.random() * respostasManoel.length)];
-
-      const novaResposta = {
-        id: Date.now() + Math.random(),
-        texto: resposta,
-        lado: "esquerda"
-      };
-
-      setMensagens(prev => [...prev, novaResposta]);
+      try {
+        await api.post("/mensagens", {
+          mensagem: resposta,
+          usuarioMandou: { id: userId },
+          usuarioRecebeu: { id: usuarioLogadoId }
+        });
+        console.log("Resposta automática salva no banco!");
+        await carregarMensagens();
+      } catch (error) {
+        console.log("Erro ao salvar resposta automática:", error);
+      }
     }, delay);
   }
 
+  async function enviarMensagem() {
+    if (texto.trim() === "") return;
+    const mensagemParaSalvar = texto;
+    const novaMensagemOtimista = {
+      id: Date.now(),
+      texto: mensagemParaSalvar,
+      lado: "direita"
+    };
+    setMensagens(prev => [...prev, novaMensagemOtimista]);
+    setTexto("");
+    try {
+      await api.post("/mensagens", {
+        mensagem: mensagemParaSalvar,
+        usuarioMandou: { id: usuarioLogadoId },
+        usuarioRecebeu: { id: userId }
+      });
+      console.log("Mensagem salva no banco!");
+      await responderAutomaticamente();
+    } catch (error) {
+      console.log("Erro ao salvar mensagem no banco:", error);
+    }
+  }
   return (
     <View style={{ flex: 1, backgroundColor: '#faf8d4' }}>
       <ScrollView style={{ flex: 1 }}>
@@ -124,7 +150,7 @@ export function Menssagem() {
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, marginLeft: -20 }}>
               <Image
                 source={user?.foto ? { uri: `data:image/jpeg;base64,${user.foto}` }
-                : Usuario}
+                  : Usuario}
                 style={styles.img}
               />
               <View style={{ alignItems: 'center', marginLeft: 15 }}>

@@ -49,7 +49,6 @@ export function PerfilCuidador() {
   const [salvando, setSalvando] = useState(false);
   const navigation = useNavigation();
 
-  // Carregar estados e cidades
   const carregarEstados = async () => {
     try {
       const response = await api.get("/estados");
@@ -82,7 +81,7 @@ export function PerfilCuidador() {
       const u = response.data;
       setUser(u);
 
-      // Preenche inputs
+      
       setNome(u.nome);
       setEmail(u.email);
       setTelefone(u.telefone);

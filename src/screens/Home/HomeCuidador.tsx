@@ -230,18 +230,17 @@ export function HomeCuidador() {
                             size={45}
                             color="#c89a65"
                             style={{
-                              marginRight: 10,
                               borderColor:
                                 index % 2 === 0 ? "#7fa9c7" : "#8ec46e",
                               borderWidth: 1,
                               borderRadius: 15,
-                              padding: 5,
+                              padding: 7,
                             }}
                           />
                         )}
                       </TouchableOpacity>
+
                       <View style={{ marginLeft: 5 }}>
-                        <View style={{ flex: 1, marginLeft: 10 }}>
                           <Text style={[styles.texto1, { flexWrap: "wrap" }]}>
                             {user.nome} | {calcularIdade(user.nascimento)} anos
                           </Text>
@@ -250,7 +249,6 @@ export function HomeCuidador() {
                             Localização: {user.cidade?.nome} -{" "}
                             {user.cidade?.estado?.sigla}
                           </Text>
-                        </View>
                       </View>
                     </View>
                     <View>
@@ -311,7 +309,7 @@ export function HomeCuidador() {
                           }
                           size={25}
                           color={index % 2 === 0 ? "#8ec46e" : "#7fa9c7"}
-                          style={{ marginTop: 18, marginLeft: 15 }}
+                          style={{ marginTop: 18, marginLeft: 10 }}
                         />
                       </TouchableOpacity>
                     </View>

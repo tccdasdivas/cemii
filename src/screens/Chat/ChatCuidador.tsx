@@ -165,7 +165,14 @@ export function ChatCuidador() {
                       source={{
                         uri: `data:image/jpeg;base64,${conversa.fotoUsuario}`,
                       }}
-                      style={{ borderColor: coresBordaImg[index % 3] }}
+                      style={{
+                        borderColor: coresBordaImg[index % 3],
+                        width: 70,
+                        height: 70,
+                        borderRadius: 50,
+                        borderWidth: 1,
+                        marginLeft: 10,
+                      }}
                     />
                   ) : (
                     <Ionicons

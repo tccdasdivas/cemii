@@ -18,7 +18,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 
 import Fundo from "../../../assets/fundoHome.png";
-import { Pesquisar } from "../../components/TextInput/Pesquisar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "../../services/api";
 
@@ -144,7 +143,7 @@ export function ChatResponsavel() {
         <View style={styles.boxtexto}>
           {conversasFiltradas.map((conversa, index) => (
             <TouchableOpacity
-              key={conversa.id}
+              key={conversa.idOutroUsuario}
               onPress={() =>
                 navigation.navigate("Menssagem", {
                   userId: conversa.idOutroUsuario,
@@ -166,7 +165,14 @@ export function ChatResponsavel() {
                       source={{
                         uri: `data:image/jpeg;base64,${conversa.fotoUsuario}`,
                       }}
-                      style={{ borderColor: coresBordaImg[index % 3] }}
+                      style={{
+                        borderColor: coresBordaImg[index % 3],
+                        width: 70,
+                        height: 70,
+                        borderRadius: 50,
+                        borderWidth: 1,
+                        marginLeft: 10,
+                      }}
                     />
                   ) : (
                     <Ionicons

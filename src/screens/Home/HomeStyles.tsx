@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    marginBottom:10
   },
   imagem: {
     width: "100%",
@@ -122,8 +123,8 @@ export const styles = StyleSheet.create({
   perfil1: {
     borderWidth: 2,
     borderRadius: 15,
-    height: 55,
-    width: 55,
+    height: 65,
+    width: 65,
   },
   input: {
     backgroundColor: "rgba(236, 227, 184 / 0.7)",
@@ -145,7 +146,7 @@ export const styles = StyleSheet.create({
     height: 45,
   },
   botao: {
-    width: 250,
+    width: 240,
     borderRadius: 20,
     height: 50,
     alignItems: "center",
