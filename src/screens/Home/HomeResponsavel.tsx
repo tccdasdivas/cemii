@@ -55,6 +55,7 @@ interface User {
   foto: string;
 }
 
+//aqui mostra os cuidador
 export function HomeResponsavel() {
   const [modalFiltroVisivel, setModalFiltroVisivel] = useState(false);
   const [filtroProfissao, setFiltroProfissao] = useState<string | null>(null);

@@ -62,6 +62,7 @@ interface User {
   foto: string;
 }
 
+//aqui mostra os idosos
 export function HomeCuidador() {
   const [modalFiltroVisivel, setModalFiltroVisivel] = useState(false);
   const [filtroNecessidade, setFiltroNecessidade] = useState<

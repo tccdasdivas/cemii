@@ -208,6 +208,7 @@ export function CadastroFam({ navigation }: any) {
               }
             >
               <Picker.Item label="Selecione" value="" />
+              <Picker.Item label="Cônjugue" value="Cônjugue" />
               <Picker.Item label="Mãe" value="Mãe" />
               <Picker.Item label="Pai" value="Pai" />
               <Picker.Item label="Filho(a)" value="Filho(a)" />
