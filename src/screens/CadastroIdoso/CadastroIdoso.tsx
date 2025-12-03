@@ -22,6 +22,7 @@ import { api } from "../../services/api";
 import { MaskedTextInput } from "react-native-mask-text";
 import { Picker } from "@react-native-picker/picker";
 import { FotoPicker } from "../../components/FotoPicker/FotoPicker";
+import { calcularIdade } from "../../utils/calcularIdade";
 
 export function CadastroIdoso({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
@@ -125,6 +126,12 @@ export function CadastroIdoso({ navigation }: any) {
 
   // 🧱 Função principal de cadastro
   const handleSubmit = async () => {
+const idade = calcularIdade(form.nascimento);
+  if (idade < 60) {
+    Alert.alert("Atenção", "Você precisa ter 60 anos ou mais para se cadastrar como idoso.");
+    return;
+  }
+
     if (!form.nome || !form.estado || !form.cidade) {
       Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
       return;

@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Image, ScrollView, TouchableOpacity, View, Text, TextInput } from 'react-native';
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  Text,
+  TextInput,
+} from "react-native";
 
-import { styles } from './MenssagemStyles';
+import { styles } from "./MenssagemStyles";
 
-import Usuario from '../../../assets/usuario.png';
+import Usuario from "../../../assets/usuario.png";
 
-import AntDesign from '@expo/vector-icons/AntDesign';
-import Feather from '@expo/vector-icons/Feather';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import * as Font from "expo-font";
-import { MenssagemBalao } from '../../components/MenssagemBalao/MenssagemBalao';
+import { MenssagemBalao } from "../../components/MenssagemBalao/MenssagemBalao";
 import { api } from "../../services/api";
 
 export function Menssagem() {
-
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -27,45 +33,33 @@ export function Menssagem() {
 
   const [texto, setTexto] = useState("");
 
-  const respostasManoel = [
-    "Ô meu amigo, calma aí!",
-    "Isso aí tá bom demais!",
-    "Eu não sei, mas vou descobrir.",
-    "Rapaz... que conversa boa!",
-    "Diz aí de novo, não entendi não.",
-    "Oxe, pois tá certo então!",
-    "Eu gosto é assim!",
-    "Cê tá falando sério?",
-    "Vixe Maria!",
-    "Kkkkkk tu é engraçado demais!"
-  ];
-
   async function carregarMensagens() {
     if (!usuarioLogadoId || !userId) return;
 
     try {
-        const response = await api.get(`/mensagens/usuario/${usuarioLogadoId}`);  
-        const todasMensagensDoUsuario = response.data;
-        const mensagensDesteChat = todasMensagensDoUsuario.filter(msg => 
-           
-            (msg.usuarioMandou.id === userId || msg.usuarioRecebeu.id === userId)
-        );
-      
-        const historicoFormatado = mensagensDesteChat
-            .sort((a, b) => a.id - b.id) 
-            .map(msg => ({
-                id: msg.id,
-                texto: msg.mensagem,
-                lado: msg.usuarioMandou.id === usuarioLogadoId ? 'direita' : 'esquerda',
-            }));
+      const response = await api.get(`/mensagens/usuario/${usuarioLogadoId}`);
+      const todasMensagensDoUsuario = response.data;
 
-        setMensagens(historicoFormatado);
+      const mensagensDesteChat = todasMensagensDoUsuario.filter(
+        (msg) =>
+          msg.usuarioMandou.id === userId || msg.usuarioRecebeu.id === userId
+      );
 
+      const historicoFormatado = mensagensDesteChat
+        .sort((a, b) => a.id - b.id)
+        .map((msg) => ({
+          id: msg.id,
+          texto: msg.mensagem,
+          lado:
+            msg.usuarioMandou.id === usuarioLogadoId ? "direita" : "esquerda",
+        }));
+
+      setMensagens(historicoFormatado);
     } catch (e) {
-        console.log("Erro ao carregar mensagens:", e);
-        setMensagens([]);
+      console.log("Erro ao carregar mensagens:", e);
+      setMensagens([]);
     }
-}
+  }
 
   useEffect(() => {
     async function loadFonts() {
@@ -76,7 +70,6 @@ export function Menssagem() {
     }
     loadFonts();
   }, []);
-
 
   useEffect(() => {
     async function loadUser() {
@@ -94,123 +87,123 @@ export function Menssagem() {
     }
   }, [userId, usuarioLogadoId]);
 
-  async function responderAutomaticamente() {
-    const delay = Math.floor(Math.random() * 1500) + 800;
-    setTimeout(async () => {
-      const resposta = respostasManoel[Math.floor(Math.random() * respostasManoel.length)];
-      try {
-        await api.post("/mensagens", {
-          mensagem: resposta,
-          usuarioMandou: { id: userId },
-          usuarioRecebeu: { id: usuarioLogadoId }
-        });
-        console.log("Resposta automática salva no banco!");
-        await carregarMensagens();
-      } catch (error) {
-        console.log("Erro ao salvar resposta automática:", error);
-      }
-    }, delay);
-  }
-
   async function enviarMensagem() {
     if (texto.trim() === "") return;
+
     const mensagemParaSalvar = texto;
     const novaMensagemOtimista = {
       id: Date.now(),
       texto: mensagemParaSalvar,
-      lado: "direita"
+      lado: "direita",
     };
-    setMensagens(prev => [...prev, novaMensagemOtimista]);
+
+    setMensagens((prev) => [...prev, novaMensagemOtimista]);
     setTexto("");
+
     try {
       await api.post("/mensagens", {
         mensagem: mensagemParaSalvar,
         usuarioMandou: { id: usuarioLogadoId },
-        usuarioRecebeu: { id: userId }
+        usuarioRecebeu: { id: userId },
       });
       console.log("Mensagem salva no banco!");
-      await responderAutomaticamente();
+      await carregarMensagens();
     } catch (error) {
       console.log("Erro ao salvar mensagem no banco:", error);
     }
   }
+
   return (
-    <View style={{ flex: 1, backgroundColor: '#faf8d4' }}>
+    <View style={{ flex: 1, backgroundColor: "#faf8d4" }}>
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.box1}>
-            <View style={{ flexDirection: 'row', marginTop: -80 }}>
+            <View style={{ flexDirection: "row", marginTop: -80 }}>
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
-                style={styles.icone}>
+                style={styles.icone}
+              >
                 <AntDesign name="arrowleft" size={30} style={styles.seta} />
               </TouchableOpacity>
             </View>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, marginLeft: -20 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                marginTop: 20,
+                marginLeft: -20,
+              }}
+            >
               <Image
-                source={user?.foto ? { uri: `data:image/jpeg;base64,${user.foto}` }
-                  : Usuario}
+                source={
+                  user?.foto
+                    ? { uri: `data:image/jpeg;base64,${user.foto}` }
+                    : Usuario
+                }
                 style={styles.img}
               />
-              <View style={{ alignItems: 'center', marginLeft: 15 }}>
-                <Text style={styles.texto1}>
-                  {user?.nome ?? "Usuário"}
-                </Text>
-                <Text style={styles.texto2}>
-                  {user?.profissao ?? "Profissão não informada"}
-                </Text>
+              <View style={{ justifyContent: "center", marginLeft: 70 }}>
+                <Text style={styles.texto1}>{user?.nome ?? "Usuário"}</Text>
+                
+                {user?.tipoUsuario === "CUIDADOR" && (
+                  <Text style={styles.texto2}>
+                    {user?.profissao ?? "Profissão não informada"}
+                  </Text>
+                )}
               </View>
             </View>
           </View>
 
           <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-            {mensagens.map(msg => (
+            {mensagens.map((msg) => (
               <MenssagemBalao
                 key={msg.id}
                 texto={msg.texto}
-                isyou={msg.lado == 'direita'}
+                isyou={msg.lado == "direita"}
               />
             ))}
           </View>
-
         </View>
       </ScrollView>
 
-      <View style={{
-        flexDirection: 'row',
-        padding: 10,
-        alignItems: 'center'
-      }}>
+      <View
+        style={{
+          flexDirection: "row",
+          padding: 10,
+          alignItems: "center",
+        }}
+      >
         <TextInput
           style={{
             flex: 1,
-            backgroundColor: 'rgba(200, 154, 101,0.6)',
+            backgroundColor: "rgba(200, 154, 101,0.6)",
             padding: 10,
             borderRadius: 20,
-            borderColor: 'rgba(125, 82, 32,0.6)',
+            borderColor: "rgba(125, 82, 32,0.6)",
             borderWidth: 1,
-            fontFamily: 'Quicksand-Bold'
+            fontFamily: "Quicksand-Bold",
           }}
           placeholder="Digite sua mensagem..."
           value={texto}
           onChangeText={setTexto}
         />
 
-        <TouchableOpacity onPress={enviarMensagem} style={{
-          marginLeft: 10,
-          backgroundColor: 'rgba(127, 169, 199,0.6)',
-          borderRadius: 50,
-          borderColor: "rgba(6, 2, 82,0.6)",
-          borderWidth: 2,
-          padding: 5,
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
+        <TouchableOpacity
+          onPress={enviarMensagem}
+          style={{
+            marginLeft: 10,
+            backgroundColor: "rgba(127, 169, 199,0.6)",
+            borderRadius: 50,
+            borderColor: "rgba(6, 2, 82,0.6)",
+            borderWidth: 2,
+            padding: 5,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Feather name="send" size={28} color="rgba(6, 2, 82,0.6)" />
         </TouchableOpacity>
       </View>
-
     </View>
   );
 }

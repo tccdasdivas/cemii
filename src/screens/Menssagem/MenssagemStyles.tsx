@@ -25,7 +25,8 @@ export const styles = StyleSheet.create({
   texto1:{ 
     fontFamily:'Quicksand-Bold',
     fontSize:20, 
-    color:'#5b3000'
+    color:'#5b3000',
+    textAlign:'center'
   },
   texto2:{
     fontFamily:'Quicksand-Bold',

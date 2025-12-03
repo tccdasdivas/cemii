@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'http://192.168.56.1:8080', // ajuste para seu backend
-  timeout: 5000, // 5 segundos
+  baseURL: 'http://192.168.1.5:8080', 
+  timeout: 5000, 
 });
 
 api.post('/usuarios', { nome: 'Carol' })

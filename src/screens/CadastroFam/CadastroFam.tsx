@@ -20,6 +20,7 @@ import { Btn } from "../../components/Btn/Btn";
 import { MaskedTextInput } from "react-native-mask-text";
 import { Botao } from "../../components/Botao/Botao";
 import { FotoPicker } from "../../components/FotoPicker/FotoPicker";
+import { calcularIdade } from "../../utils/calcularIdade";
 
 export function CadastroFam({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
@@ -102,6 +103,13 @@ export function CadastroFam({ navigation }: any) {
 
   
   const handleSubmit = async () => {
+
+    const idade = calcularIdade(form.nascimento);
+      if (idade < 18) {
+        Alert.alert("Atenção", "Você precisa ter 18 anos ou mais para se cadastrar.");
+        return;
+      }
+      
     if (
       !form.nome ||
       !form.email ||

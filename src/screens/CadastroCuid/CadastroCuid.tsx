@@ -22,6 +22,7 @@ import { Btn } from "../../components/Btn/Btn";
 
 import { FotoPicker } from "../../components/FotoPicker/FotoPicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { calcularIdade } from "../../utils/calcularIdade";
 
 export function CadastroCuid({ navigation }: any) {
   const [estados, setEstados] = useState<any[]>([]);
@@ -128,6 +129,11 @@ export function CadastroCuid({ navigation }: any) {
   };
 
   const handleSubmit = async () => {
+    const idade = calcularIdade(form.nascimento);
+  if (idade < 18) {
+    Alert.alert("Atenção", "Você precisa ter 18 anos ou mais para se cadastrar.");
+    return;
+  }
     if (
       !form.nome ||
       !form.email ||

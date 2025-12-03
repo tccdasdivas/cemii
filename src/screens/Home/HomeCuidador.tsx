@@ -241,7 +241,7 @@ export function HomeCuidador() {
                         )}
                       </TouchableOpacity>
 
-                      <View style={{ marginLeft: 5 }}>
+                      <View style={{  flex: 1, marginLeft: 5 }}>
                           <Text style={[styles.texto1, { flexWrap: "wrap" }]}>
                             {user.nome} | {calcularIdade(user.nascimento)} anos
                           </Text>
@@ -276,7 +276,7 @@ export function HomeCuidador() {
                             }
 
                             navigation.navigate("Menssagem", {
-                              userId: user.id,
+                              userId: user.responsavel.id,
                               usuarioLogadoId: Number(idLogado),
                               conversaId: user.conversaId || null,
                             });
