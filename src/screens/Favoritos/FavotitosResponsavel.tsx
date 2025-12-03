@@ -18,6 +18,7 @@ import { calcularIdade } from "../../utils/calcularIdade";
 
 import Usuario from "../../../assets/usuario.png";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function FavoritosResponsavel() {
   const navigation = useNavigation();
@@ -25,6 +26,7 @@ export function FavoritosResponsavel() {
   const [favoritosIds, setFavoritosIds] = useState<number[]>([]);
   const [usuariosFavoritos, setUsuariosFavoritos] = useState<any[]>([]);
   const FAV_CUIDADORES = "@favoritos_cuidadores";
+  const [idUsuarioLogado, setIdUsuarioLogado] = useState<number | null>(null);
 
   useEffect(() => {
     async function loadFonts() {
@@ -43,26 +45,59 @@ export function FavoritosResponsavel() {
   }, []);
 
   useEffect(() => {
-    async function carregarUsuariosFavoritos() {
-      try {
-        const response = await api.get("/usuarios");
-        let allUsers = Array.isArray(response.data)
-          ? response.data
-          : Array.isArray(response.data.usuarios)
-          ? response.data.usuarios
-          : [];
-        const favoritos = allUsers.filter((u) => favoritosIds.includes(u.id));
-        setUsuariosFavoritos(favoritos);
-      } catch (error) {
-        console.log("Erro ao carregar usuários favoritos:", error);
+  async function carregarUsuarioLogado() {
+    try {
+      const userSaved = await AsyncStorage.getItem("user");
+
+      if (userSaved) {
+        const userParsed = JSON.parse(userSaved);
+        setIdUsuarioLogado(userParsed.id);
+        console.log("🔥 ID do usuário logado:", userParsed.id);
       }
+    } catch (error) {
+      console.log("Erro ao carregar usuário logado:", error);
     }
-    if (favoritosIds.length > 0) {
-      carregarUsuariosFavoritos();
-    } else {
-      setUsuariosFavoritos([]);
+  }
+
+  carregarUsuarioLogado();
+}, []);
+
+
+
+  useEffect(() => {
+  async function carregarUsuariosFavoritos() {
+    try {
+      const response = await api.get("/usuarios");
+      let allUsers = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data.usuarios)
+        ? response.data.usuarios
+        : [];
+
+      console.log("🔥 TODOS OS USUÁRIOS:", allUsers);
+      console.log("🔥 FAVORITOS IDS:", favoritosIds);
+      console.log("🔥 ID DO USUÁRIO LOGADO:", idUsuarioLogado);
+
+      const favoritos = allUsers
+        .filter((u) => favoritosIds.includes(u.id))
+        .filter((u) => u.id !== idUsuarioLogado);
+
+      console.log("🔥 RESULTADO FINAL (sem o logado):", favoritos);
+
+      setUsuariosFavoritos(favoritos);
+    } catch (error) {
+      console.log("Erro ao carregar usuários favoritos:", error);
     }
-  }, [favoritosIds]);
+  }
+
+  if (favoritosIds.length > 0) {
+    carregarUsuariosFavoritos();
+  } else {
+    setUsuariosFavoritos([]);
+  }
+}, [favoritosIds, idUsuarioLogado]);
+
+
 
   const coresFundo = [
     "rgba(127, 169, 199,0.2)",
